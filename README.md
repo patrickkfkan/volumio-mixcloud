@@ -58,5 +58,8 @@ The purpose of this plugin is to allow you to discover shows and content creator
 
 ## Changelog
 
+0.1.0a-20210310
+- Avoid cut-offs at ~10 minutes into playback due to buggy MPD in Volumio
+
 0.1.0a
 - Initial release
