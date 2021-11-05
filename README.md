@@ -4,6 +4,13 @@ Volumio plugin for playing Mixcloud shows.
 
 *This plugin is not affiliated with Mixcloud whatsoever.*
 
+This repository has two branches:
+
+1. The `master` branch is targeted towards Volumio 3.
+2. The `volumio-2.x` branch is targeted towards Volumio 2.x.
+
+The focus is on the `master` branch. The `volumio-2.x` branch will only be maintained if it is practically feasible and still worthwhile to do so.
+
 ## Getting Started
 
 To install the Mixcloud plugin, first make sure you have [enabled SSH access](https://volumio.github.io/docs/User_Manual/SSH.html) on your Volumio device. Then, in a terminal:
@@ -11,10 +18,13 @@ To install the Mixcloud plugin, first make sure you have [enabled SSH access](ht
 ```
 $ ssh volumio@<your_Volumio_address>
 
+// You can copy and paste each line after the $ sign
+
 volumio:~$ mkdir mixcloud-plugin
 volumio:~$ cd mixcloud-plugin
 volumio:~/mixcloud-plugin$ git clone https://github.com/patrickkfkan/volumio-mixcloud.git
 volumio:~/mixcloud-plugin$ cd volumio-mixcloud
+volumio:~/mixcloud-plugin$ git checkout volumio-2.x
 volumio:~/mixcloud-plugin/volumio-mixcloud$ volumio plugin install
 
 ...
@@ -32,7 +42,11 @@ Now access Volumio in a web browser. Go to ``Plugins -> Installed plugins`` and 
 When a new version of the plugin becomes available, you can ssh into your Volumio device and update as follows (assuming you have not deleted the directory which you cloned from this repo):
 
 ```
+// You can copy and paste each line after the $ sign
+
 volumio:~$ cd ~/mixcloud-plugin/volumio-mixcloud/
+volumio:~/mixcloud-plugin/volumio-mixcloud$ git pull
+volumio:~/mixcloud-plugin/volumio-mixcloud$ git checkout volumio-2.x
 volumio:~/mixcloud-plugin/volumio-mixcloud$ git pull
 ...
 volumio:~/mixcloud-plugin/volumio-mixcloud$ volumio plugin update
