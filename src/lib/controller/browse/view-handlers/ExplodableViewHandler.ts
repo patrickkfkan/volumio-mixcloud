@@ -4,6 +4,8 @@ import ViewHelper from './ViewHelper';
 import { CloudcastEntity } from '../../../entities/CloudcastEntity';
 import UIHelper from '../../../util/UIHelper';
 import { CloudcastView } from './CloudcastViewHandler';
+import { LiveStreamEntity } from '../../../entities/LiveStreamEntity';
+import { LiveStreamView } from './LiveStreamViewHandler';
 
 export interface ExplodedTrackInfo {
   service: 'mixcloud';
@@ -17,7 +19,9 @@ export interface ExplodedTrackInfo {
   samplerate?: string;
 }
 
-export default abstract class ExplodableViewHandler<V extends View, E extends CloudcastEntity = CloudcastEntity> extends BaseViewHandler<V> {
+export type StreamableEntity = CloudcastEntity | LiveStreamEntity;
+
+export default abstract class ExplodableViewHandler<V extends View> extends BaseViewHandler<V> {
 
   async explode(): Promise<ExplodedTrackInfo[]> {
     const view = this.currentView;
@@ -25,50 +29,71 @@ export default abstract class ExplodableViewHandler<V extends View, E extends Cl
       return [];
     }
 
-    const tracks = await this.getTracksOnExplode();
+    const tracks = await this.getStreamableEntitiesOnExplode();
     if (!Array.isArray(tracks)) {
-      const trackInfo = await this.parseTrackForExplode(tracks);
+      const trackInfo = await this.convertStreamableEntityToExplodedTrackInfo(tracks);
       return trackInfo ? [ trackInfo ] : [];
     }
 
-    const trackInfoPromises = tracks.map((track) => this.parseTrackForExplode(track));
+    const trackInfoPromises = tracks.map((track) => this.convertStreamableEntityToExplodedTrackInfo(track));
     return (await Promise.all(trackInfoPromises)).filter((song) => song) as ExplodedTrackInfo[];
   }
 
-  protected async parseTrackForExplode(track: E): Promise<ExplodedTrackInfo | null> {
-    const trackUri = this.getTrackUri(track);
-    if (!trackUri) {
-      return null;
+  protected async convertStreamableEntityToExplodedTrackInfo(entity: StreamableEntity): Promise<ExplodedTrackInfo | null> {
+    switch (entity.type) {
+      case 'cloudcast':
+        return this.#convertCloudcastToExplodedTrackInfo(entity);
+      case 'liveStream':
+        return this.#convertLivestreamToExplodedTrackInfo(entity);
     }
-    const trackName = !track.isExclusive ? track.name : UIHelper.addExclusiveText(track.name);
+  }
+
+  protected abstract getStreamableEntitiesOnExplode(): Promise<StreamableEntity | StreamableEntity[]>;
+
+  #convertCloudcastToExplodedTrackInfo(cloudcast: CloudcastEntity): ExplodedTrackInfo {
+    // Track URI: mixcloud/cloudcast@cloudcastId={...}@owner={...}
+    const cloudcastView: CloudcastView = {
+      name: 'cloudcast',
+      cloudcastId: cloudcast.id
+    };
+    if (cloudcast.owner?.username) {
+      cloudcastView.owner = cloudcast.owner.username;
+    }
+    const trackUri = `mixcloud/${ViewHelper.constructUriSegmentFromView(cloudcastView)}`;
+
+    const trackName = !cloudcast.isExclusive ? cloudcast.name : UIHelper.addExclusiveText(cloudcast.name);
+
     return {
       service: 'mixcloud',
       uri: trackUri,
-      albumart: track.thumbnail,
-      artist: track.owner?.name || track.owner?.username,
+      albumart: cloudcast.thumbnail,
+      artist: cloudcast.owner?.name || cloudcast.owner?.username,
       album: '',
       name: trackName,
       title: trackName
     };
   }
 
-  protected abstract getTracksOnExplode(): Promise<E | E[]>;
-
-  /**
-   * Track uri:
-   * mixcloud/cloudcast@cloudcastId={...}@owner={...}
-   */
-  protected getTrackUri(track: E) {
-    if (!track.url) {
+  #convertLivestreamToExplodedTrackInfo(liveStream: LiveStreamEntity): ExplodedTrackInfo | null {
+    if (!liveStream.owner) {
       return null;
     }
-    const cloudcastView: CloudcastView = {
-      name: 'cloudcast',
-      cloudcastId: track.id
+
+    // Track URI: mixcloud/livestream@usernamer={...}
+    const liveStreamView: LiveStreamView = {
+      name: 'liveStream',
+      username: liveStream.owner.username
     };
-    if (track.owner?.username) {
-      cloudcastView.owner = track.owner.username;
-    }
-    return `mixcloud/${ViewHelper.constructUriSegmentFromView(cloudcastView)}`;
+    const trackUri = `mixcloud/${ViewHelper.constructUriSegmentFromView(liveStreamView)}`;
+
+    return {
+      service: 'mixcloud',
+      uri: trackUri,
+      albumart: liveStream.thumbnail,
+      artist: liveStream.owner.name || liveStream.owner.username,
+      album: '',
+      name: liveStream.name,
+      title: liveStream.name
+    };
   }
 }

@@ -10,6 +10,7 @@ const DiscoverModel_1 = __importDefault(require("./DiscoverModel"));
 const PlaylistModel_1 = __importDefault(require("./PlaylistModel"));
 const TagModel_1 = __importDefault(require("./TagModel"));
 const UserModel_1 = __importDefault(require("./UserModel"));
+const LiveStreamModel_1 = __importDefault(require("./LiveStreamModel"));
 var ModelType;
 (function (ModelType) {
     ModelType["Cloudcast"] = "Cloudcast";
@@ -17,13 +18,15 @@ var ModelType;
     ModelType["Playlist"] = "Playlist";
     ModelType["Tag"] = "Tag";
     ModelType["User"] = "User";
+    ModelType["LiveStream"] = "LiveStream";
 })(ModelType || (exports.ModelType = ModelType = {}));
 const MODEL_TYPE_TO_CLASS = {
     [ModelType.Cloudcast]: CloudcastModel_1.default,
     [ModelType.Discover]: DiscoverModel_1.default,
     [ModelType.Playlist]: PlaylistModel_1.default,
     [ModelType.Tag]: TagModel_1.default,
-    [ModelType.User]: UserModel_1.default
+    [ModelType.User]: UserModel_1.default,
+    [ModelType.LiveStream]: LiveStreamModel_1.default
 };
 class Model {
     static getInstance(type) {

@@ -9,6 +9,6 @@ export interface PlaylistView extends View {
 export default class PlaylistViewHandler extends ExplodableViewHandler<PlaylistView> {
     #private;
     browse(): Promise<RenderedPage>;
-    protected getTracksOnExplode(): Promise<import("../../../entities/CloudcastEntity").CloudcastEntity[]>;
+    protected getStreamableEntitiesOnExplode(): Promise<import("../../../entities/CloudcastEntity").CloudcastEntity[]>;
 }
 //# sourceMappingURL=PlaylistViewHandler.d.ts.map

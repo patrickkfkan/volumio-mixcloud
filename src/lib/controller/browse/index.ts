@@ -29,6 +29,7 @@ export default class BrowseController {
   /**
    * Explodable uris:
    * - cloudcast[@cloudcastId=...][@owner=...]
+   * - liveStream[@username=...]
    */
   explodeUri(uri: string): Promise<ExplodedTrackInfo[]> {
     mixcloud.getLogger().info(`[mixcloud] explodeUri: ${uri}`);

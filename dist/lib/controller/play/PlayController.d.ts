@@ -5,6 +5,7 @@ export default class PlayController {
     /**
      * Track uri:
      * - mixcloud/cloudcast@cloudcastId={...}@owner={...}
+     * - mixcloud/livestream@usernamer={...}
      */
     clearAddPlayTrack(track: ExplodedTrackInfo): Promise<any>;
     stop(): any;

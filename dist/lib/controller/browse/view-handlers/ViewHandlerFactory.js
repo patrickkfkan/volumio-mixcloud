@@ -11,6 +11,7 @@ const FeaturedViewHandler_1 = __importDefault(require("./FeaturedViewHandler"));
 const PlaylistViewHandler_1 = __importDefault(require("./PlaylistViewHandler"));
 const TagViewHandler_1 = __importDefault(require("./TagViewHandler"));
 const UserViewHandler_1 = __importDefault(require("./UserViewHandler"));
+const LiveStreamViewHandler_1 = __importDefault(require("./LiveStreamViewHandler"));
 const VIEW_NAME_TO_CLASS = {
     'root': RootViewHandler_1.default,
     'cloudcast': CloudcastViewHandler_1.default,
@@ -21,7 +22,9 @@ const VIEW_NAME_TO_CLASS = {
     'playlists': PlaylistViewHandler_1.default,
     'tags': TagViewHandler_1.default,
     'user': UserViewHandler_1.default,
-    'users': UserViewHandler_1.default
+    'users': UserViewHandler_1.default,
+    'liveStream': LiveStreamViewHandler_1.default,
+    'liveStreams': LiveStreamViewHandler_1.default
 };
 class ViewHandlerFactory {
     static getHandler(uri) {
@@ -30,31 +33,6 @@ class ViewHandlerFactory {
         const previousViews = views;
         if (!currentView) {
             throw Error('Invalid URI: no parseable view.');
-        }
-        /**
-         * 'artist' and 'label' views are obsolete (replaced by single 'band' view),
-         * but may still exist in Volumio playlists or favourites. We still want to be able
-         * to play them, so we translate these URIs into their 'band' equivalent.
-         */
-        if (currentView.name === 'artist' || currentView.name === 'label') {
-            currentView.name = 'band';
-            if (currentView.artistUrl) {
-                currentView.bandUrl = currentView.artistUrl;
-                delete currentView.artistUrl;
-            }
-            if (currentView.labelUrl) {
-                currentView.bandUrl = currentView.labelUrl;
-                delete currentView.labelUrl;
-            }
-        }
-        /**
-         * 'articles' and 'shows' are also absolute (replaced by singular form)
-         */
-        else if (currentView.name === 'articles') {
-            currentView.name = 'article';
-        }
-        else if (currentView.name === 'shows') {
-            currentView.name = 'show';
         }
         return new VIEW_NAME_TO_CLASS[currentView.name](uri, currentView, previousViews);
     }

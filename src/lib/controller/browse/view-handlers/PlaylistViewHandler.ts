@@ -86,7 +86,7 @@ export default class PlaylistViewHandler extends ExplodableViewHandler<PlaylistV
     };
   }
 
-  protected async getTracksOnExplode() {
+  protected async getStreamableEntitiesOnExplode() {
     const view = this.currentView;
     if (!view.playlistId) {
       throw Error('Operation not supported');

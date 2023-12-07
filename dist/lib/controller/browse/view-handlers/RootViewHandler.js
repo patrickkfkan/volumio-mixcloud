@@ -30,7 +30,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _RootViewHandler_instances, _RootViewHandler_getCategories, _RootViewHandler_getFeatured;
+var _RootViewHandler_instances, _RootViewHandler_getCategories, _RootViewHandler_getFeatured, _RootViewHandler_getLiveStreams;
 Object.defineProperty(exports, "__esModule", { value: true });
 const MixcloudContext_1 = __importDefault(require("../../../MixcloudContext"));
 const model_1 = require("../../../model");
@@ -44,7 +44,8 @@ class RootViewHandler extends BaseViewHandler_1.default {
         _RootViewHandler_instances.add(this);
     }
     async browse() {
-        const [categories, featured] = await Promise.all([
+        const [liveStreams, categories, featured] = await Promise.all([
+            __classPrivateFieldGet(this, _RootViewHandler_instances, "m", _RootViewHandler_getLiveStreams).call(this),
             __classPrivateFieldGet(this, _RootViewHandler_instances, "m", _RootViewHandler_getCategories).call(this),
             __classPrivateFieldGet(this, _RootViewHandler_instances, "m", _RootViewHandler_getFeatured).call(this)
         ]);
@@ -52,6 +53,7 @@ class RootViewHandler extends BaseViewHandler_1.default {
             navigation: {
                 prev: { uri: '/' },
                 lists: [
+                    ...liveStreams,
                     ...categories,
                     ...featured
                 ]
@@ -86,6 +88,11 @@ _RootViewHandler_instances = new WeakSet(), _RootViewHandler_getCategories = asy
     return lists;
 }, _RootViewHandler_getFeatured = async function _RootViewHandler_getFeatured() {
     const uri = `${this.uri}/featured@inSection=1`;
+    const handler = ViewHandlerFactory_1.default.getHandler(uri);
+    const page = await handler.browse();
+    return page.navigation?.lists || [];
+}, _RootViewHandler_getLiveStreams = async function _RootViewHandler_getLiveStreams() {
+    const uri = `${this.uri}/liveStreams@inSection=1`;
     const handler = ViewHandlerFactory_1.default.getHandler(uri);
     const page = await handler.browse();
     return page.navigation?.lists || [];

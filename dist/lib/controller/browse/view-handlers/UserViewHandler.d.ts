@@ -9,10 +9,11 @@ export interface UserView extends View {
     dateJoined?: UserModelGetUsersParams['dateJoined'];
     userType?: UserModelGetUsersParams['userType'];
     select?: 'dateJoined' | 'userType';
+    playTarget?: 'liveStream';
 }
 export default class UserViewHandler extends ExplodableViewHandler<UserView> {
     #private;
     browse(): Promise<RenderedPage>;
-    protected getTracksOnExplode(): Promise<import("../../../entities/CloudcastEntity").CloudcastEntity[]>;
+    protected getStreamableEntitiesOnExplode(): Promise<import("../../../entities/CloudcastEntity").CloudcastEntity[] | import("../../../entities/LiveStreamEntity").LiveStreamEntity>;
 }
 //# sourceMappingURL=UserViewHandler.d.ts.map

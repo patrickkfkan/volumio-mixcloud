@@ -10,6 +10,7 @@ declare class MixcloudContext {
     init(pluginContext: any, pluginConfig: any): void;
     toast(type: 'success' | 'info' | 'error' | 'warning', message: string, title?: string): void;
     getLogger(): winston.Logger;
+    getErrorMessage(message: string, error: any, stack?: boolean): string;
     getConfigValue<T extends PluginConfigKey>(key: T): PluginConfigValue<T>;
     deleteConfigValue(key: string): void;
     setConfigValue(key: string, value: any, json?: boolean): void;

@@ -1,5 +1,6 @@
 import { UserEntity } from './UserEntity.js';
 export interface CloudcastEntity {
+    type: 'cloudcast';
     id: string;
     url?: string;
     name: string;

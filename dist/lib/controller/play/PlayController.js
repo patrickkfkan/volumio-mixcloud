@@ -36,7 +36,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _PlayController_instances, _PlayController_mpdPlugin, _PlayController_getStreamUrl, _PlayController_doGetStreamUrl, _PlayController_doPlay, _PlayController_mpdAddTags, _PlayController_getBandwidthFromHLS;
+var _PlayController_instances, _PlayController_mpdPlugin, _PlayController_getStreamInfo, _PlayController_doPlay, _PlayController_mpdAddTags, _PlayController_getBandwidthFromHLS;
 Object.defineProperty(exports, "__esModule", { value: true });
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -46,6 +46,8 @@ const m3u8_parser_1 = require("m3u8-parser");
 const MixcloudContext_1 = __importDefault(require("../../MixcloudContext"));
 const ViewHelper_1 = __importDefault(require("../browse/view-handlers/ViewHelper"));
 const model_1 = __importStar(require("../../model"));
+const LiveStreamProxy_1 = __importDefault(require("./LiveStreamProxy"));
+const util_1 = require("../../util");
 class PlayController {
     constructor() {
         _PlayController_instances.add(this);
@@ -55,18 +57,27 @@ class PlayController {
     /**
      * Track uri:
      * - mixcloud/cloudcast@cloudcastId={...}@owner={...}
+     * - mixcloud/livestream@usernamer={...}
      */
     async clearAddPlayTrack(track) {
         MixcloudContext_1.default.getLogger().info(`[mixcloud] clearAddPlayTrack: ${track.uri}`);
-        let streamUrl;
+        let stream;
         try {
-            streamUrl = await __classPrivateFieldGet(this, _PlayController_instances, "m", _PlayController_getStreamUrl).call(this, track);
+            stream = await __classPrivateFieldGet(this, _PlayController_instances, "m", _PlayController_getStreamInfo).call(this, track);
         }
         catch (error) {
             MixcloudContext_1.default.getLogger().error(`[mixcloud] Error getting stream: ${error}`);
             throw error;
         }
-        return __classPrivateFieldGet(this, _PlayController_instances, "m", _PlayController_doPlay).call(this, streamUrl, track);
+        try {
+            return await (0, util_1.kewToJSPromise)(__classPrivateFieldGet(this, _PlayController_instances, "m", _PlayController_doPlay).call(this, stream.url, track));
+        }
+        catch (error) {
+            if (stream.liveStreamProxy) {
+                await stream.liveStreamProxy.kill();
+            }
+            throw error;
+        }
     }
     // Returns kew promise!
     stop() {
@@ -99,35 +110,18 @@ class PlayController {
         return MixcloudContext_1.default.getStateMachine().previous();
     }
 }
-_PlayController_mpdPlugin = new WeakMap(), _PlayController_instances = new WeakSet(), _PlayController_getStreamUrl = async function _PlayController_getStreamUrl(track) {
-    let streamUrl = await __classPrivateFieldGet(this, _PlayController_instances, "m", _PlayController_doGetStreamUrl).call(this, track);
-    // Safe
-    streamUrl = streamUrl.replace(/"/g, '\\"');
-    /**
-     * 1. Add bitrate info to track
-     * 2. Fool MPD plugin to return correct `trackType` in `parseTrackInfo()` by adding
-     * track type to URL query string as a dummy param.
-     */
-    if (streamUrl.includes('mp3-128')) {
-        track.samplerate = '128 kbps';
-        streamUrl += '&t.mp3';
-    }
-    else if (streamUrl.includes('mp3-v0')) {
-        track.samplerate = 'HQ VBR';
-        streamUrl += '&t.mp3';
-    }
-    return streamUrl;
-}, _PlayController_doGetStreamUrl = async function _PlayController_doGetStreamUrl(track) {
+_PlayController_mpdPlugin = new WeakMap(), _PlayController_instances = new WeakSet(), _PlayController_getStreamInfo = async function _PlayController_getStreamInfo(track) {
     const views = ViewHelper_1.default.getViewsFromUri(track.uri);
     let trackView = views[1];
     if (!trackView) {
         trackView = { name: '' };
     }
+    let stream = null;
     if (trackView.name === 'cloudcast' && trackView.cloudcastId) {
         const cloudcastId = trackView.cloudcastId;
         const cloudcast = await model_1.default.getInstance(model_1.ModelType.Cloudcast).getCloudcast(cloudcastId);
-        const stream = cloudcast?.streams?.hls || cloudcast?.streams?.http || cloudcast?.streams?.dash || null;
-        if (!stream) {
+        const streamUrl = cloudcast?.streams?.hls || cloudcast?.streams?.http || cloudcast?.streams?.dash || null;
+        if (!streamUrl) {
             if (cloudcast?.isExclusive) {
                 MixcloudContext_1.default.toast('warning', MixcloudContext_1.default.getI18n('MIXCLOUD_SKIP_EXCLUSIVE', track.name));
                 MixcloudContext_1.default.getStateMachine().next();
@@ -142,19 +136,52 @@ _PlayController_mpdPlugin = new WeakMap(), _PlayController_instances = new WeakS
             }
         }
         else {
+            stream = {
+                url: streamUrl,
+                isHLS: !!cloudcast?.streams?.hls
+            };
+        }
+    }
+    else if (trackView.name === 'liveStream' && trackView.username) {
+        const username = trackView.username;
+        const liveStream = await model_1.default.getInstance(model_1.ModelType.LiveStream).getLiveStream(username);
+        if (!liveStream || !liveStream.streams?.hls) {
+            MixcloudContext_1.default.toast('error', MixcloudContext_1.default.getI18n('MIXCLOUD_USER_NO_LIVE_STREAM', username));
+            throw Error(`Live stream not found for user ${username}`);
+        }
+        if (!liveStream.isLive) {
+            MixcloudContext_1.default.toast('error', MixcloudContext_1.default.getI18n('MIXCLOUD_LIVE_STREAM_ENDED', username));
+            throw Error(`Live stream has ended for user ${username}`);
+        }
+        const proxy = new LiveStreamProxy_1.default(liveStream.streams.hls);
+        try {
+            const proxyStreamUrl = await proxy.start();
+            stream = {
+                url: proxyStreamUrl,
+                isHLS: false,
+                liveStreamProxy: proxy
+            };
+        }
+        catch (error) {
+            MixcloudContext_1.default.toast('error', MixcloudContext_1.default.getI18n('MIXCLOUD_LIVE_STREAM_PROXY_START_ERR', error instanceof Error ? error.message : error));
+            throw Error(`Live stream obtained for user ${username}, but failed to start live stream proxy for playback.`);
+        }
+        track.duration = 0;
+    }
+    if (stream) {
+        if (stream.isHLS) {
             // We setConsumeUpdateService to ignore metadata, so statemachine will take sample rate and bit depth from
             // Trackblock, which we don't have...At best, if stream is HLS, we try to obtain the max bit rate (bandwidth) and set it
             // As the sample rate. Otherwise, statemachine will obtain the bitrate from MPD but this is not always available.
-            if (cloudcast?.streams?.hls) {
-                const bandwidth = await __classPrivateFieldGet(this, _PlayController_instances, "m", _PlayController_getBandwidthFromHLS).call(this, stream);
-                if (bandwidth) {
-                    const bitrate = `${Math.floor(bandwidth / 1000)} kbps`;
-                    track.samplerate = bitrate;
-                }
+            const bandwidth = await __classPrivateFieldGet(this, _PlayController_instances, "m", _PlayController_getBandwidthFromHLS).call(this, stream.url);
+            if (bandwidth) {
+                const bitrate = `${Math.floor(bandwidth / 1000)} kbps`;
+                track.samplerate = bitrate;
             }
-            const safeUri = stream.replace(/"/g, '\\"');
-            return safeUri;
         }
+        // Safe URL
+        stream.url = stream.url.replace(/"/g, '\\"');
+        return stream;
     }
     MixcloudContext_1.default.toast('error', MixcloudContext_1.default.getI18n('MIXCLOUD_INVALID_TRACK_URI', track.uri));
     throw Error(`Invalid track URI: ${track.uri}`);

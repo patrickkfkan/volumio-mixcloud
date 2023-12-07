@@ -27,8 +27,13 @@ export default class UserRenderer extends BaseRenderer<UserEntity> {
   }
 
   renderToHeader(user: UserEntity): RenderedHeader | null {
+    const view = {...this.currentView};
+    if (view.name === 'user' && view.playTarget) {
+      delete view.playTarget;
+    }
+    const uri = ViewHelper.constructUriFromViews([ ...this.previousViews, view ]);
     const result: RenderedHeader = {
-      uri: this.uri,
+      uri,
       service: 'mixcloud',
       type: 'song',
       title: user.name || user.username,

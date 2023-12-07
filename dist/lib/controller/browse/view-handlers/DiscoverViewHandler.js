@@ -81,7 +81,7 @@ class DiscoverViewHandler extends ExplodableViewHandler_1.default {
         }
         return params;
     }
-    async getTracksOnExplode() {
+    async getStreamableEntitiesOnExplode() {
         const cloudcasts = await this.getModel(model_1.ModelType.Discover)
             .getDiscoverResults(this.getDiscoverModelParams());
         return cloudcasts.items;

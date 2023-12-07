@@ -17,6 +17,6 @@ export interface CloudcastView extends View {
 export default class CloudcastViewHandler extends ExplodableViewHandler<CloudcastView> {
     #private;
     browse(): Promise<RenderedPage>;
-    protected getTracksOnExplode(): Promise<import("../../../entities/CloudcastEntity").CloudcastEntity | import("../../../entities/CloudcastEntity").CloudcastEntity[]>;
+    protected getStreamableEntitiesOnExplode(): Promise<import("../../../entities/CloudcastEntity").CloudcastEntity | import("../../../entities/CloudcastEntity").CloudcastEntity[]>;
 }
 //# sourceMappingURL=CloudcastViewHandler.d.ts.map

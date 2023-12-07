@@ -2,6 +2,7 @@ import Model, { ModelType } from '../../../model';
 import BaseModel, { OptionBundle } from '../../../model/BaseModel';
 import CloudcastModel, { GetCloudcastsLoopFetchResult, GetCloudcastsType } from '../../../model/CloudcastModel';
 import DiscoverModel from '../../../model/DiscoverModel';
+import LiveStreamModel from '../../../model/LiveStreamModel';
 import PlaylistModel from '../../../model/PlaylistModel';
 import TagModel from '../../../model/TagModel';
 import UserModel from '../../../model/UserModel';
@@ -13,6 +14,7 @@ import ViewHelper from './ViewHelper';
 import Renderer, { RendererType } from './renderers';
 import BaseRenderer, { RenderedListItem } from './renderers/BaseRenderer';
 import CloudcastRenderer from './renderers/CloudcastRenderer';
+import LiveStreamRenderer from './renderers/LiveStreamRenderer';
 import PlaylistRenderer from './renderers/PlaylistRenderer';
 import SlugRenderer from './renderers/SlugRenderer';
 import UserRenderer from './renderers/UserRenderer';
@@ -58,6 +60,7 @@ export default class BaseViewHandler<V extends View> implements ViewHandler {
   protected getModel(type: ModelType.Playlist): PlaylistModel;
   protected getModel(type: ModelType.Tag): TagModel;
   protected getModel(type: ModelType.User): UserModel;
+  protected getModel(type: ModelType.LiveStream): LiveStreamModel;
   protected getModel(type: ModelType) {
     if (!this.#models[type]) {
       let model;
@@ -77,6 +80,9 @@ export default class BaseViewHandler<V extends View> implements ViewHandler {
         case ModelType.User:
           model = Model.getInstance(ModelType.User);
           break;
+        case ModelType.LiveStream:
+          model = Model.getInstance(ModelType.LiveStream);
+          break;
         default:
           throw Error(`Unknown model type: ${type}`);
       }
@@ -90,6 +96,7 @@ export default class BaseViewHandler<V extends View> implements ViewHandler {
   protected getRenderer(type: RendererType.Playlist): PlaylistRenderer;
   protected getRenderer(type: RendererType.Slug): SlugRenderer;
   protected getRenderer(type: RendererType.User): UserRenderer;
+  protected getRenderer(type: RendererType.LiveStream): LiveStreamRenderer;
   protected getRenderer(type: RendererType) {
     if (!this.#renderers[type]) {
       let renderer;
@@ -108,6 +115,10 @@ export default class BaseViewHandler<V extends View> implements ViewHandler {
           break;
         case RendererType.User:
           renderer = Renderer.getInstance(RendererType.User, this.#uri,
+            this.#currentView, this.#previousViews);
+          break;
+        case RendererType.LiveStream:
+          renderer = Renderer.getInstance(RendererType.LiveStream, this.#uri,
             this.#currentView, this.#previousViews);
           break;
         default:

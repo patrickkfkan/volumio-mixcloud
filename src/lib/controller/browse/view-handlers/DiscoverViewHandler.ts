@@ -194,7 +194,7 @@ export default class DiscoverViewHandler<T extends DiscoverType = 'all'> extends
     });
   }
 
-  protected async getTracksOnExplode() {
+  protected async getStreamableEntitiesOnExplode() {
     const cloudcasts = await this.getModel(ModelType.Discover)
       .getDiscoverResults(this.getDiscoverModelParams());
 

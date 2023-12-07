@@ -30,7 +30,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _UserViewHandler_instances, _UserViewHandler_browseUser, _UserViewHandler_getShows, _UserViewHandler_getPlaylists, _UserViewHandler_getUserList, _UserViewHandler_browseSearchResults, _UserViewHandler_browseSearchOptions;
+var _UserViewHandler_instances, _UserViewHandler_browseUser, _UserViewHandler_getLiveStreamList, _UserViewHandler_getShows, _UserViewHandler_getPlaylists, _UserViewHandler_getUserList, _UserViewHandler_browseSearchResults, _UserViewHandler_browseSearchOptions;
 Object.defineProperty(exports, "__esModule", { value: true });
 const MixcloudContext_1 = __importDefault(require("../../../MixcloudContext"));
 const model_1 = require("../../../model");
@@ -57,10 +57,17 @@ class UserViewHandler extends ExplodableViewHandler_1.default {
         }
         throw Error('Operation not supported');
     }
-    async getTracksOnExplode() {
+    async getStreamableEntitiesOnExplode() {
         const view = this.currentView;
         if (!view.username) {
             throw Error('Operation not supported');
+        }
+        if (view.playTarget === 'liveStream') {
+            const liveStream = await this.getModel(model_1.ModelType.LiveStream).getLiveStream(view.username);
+            if (!liveStream) {
+                return [];
+            }
+            return liveStream;
         }
         const cloudcastParams = {
             username: view.username,
@@ -71,12 +78,14 @@ class UserViewHandler extends ExplodableViewHandler_1.default {
     }
 }
 _UserViewHandler_instances = new WeakSet(), _UserViewHandler_browseUser = async function _UserViewHandler_browseUser(username) {
-    const [user, showList, playlistList] = await Promise.all([
+    const [user, liveStreamList, showList, playlistList] = await Promise.all([
         this.getModel(model_1.ModelType.User).getUser(username),
+        __classPrivateFieldGet(this, _UserViewHandler_instances, "m", _UserViewHandler_getLiveStreamList).call(this, username),
         __classPrivateFieldGet(this, _UserViewHandler_instances, "m", _UserViewHandler_getShows).call(this, username),
         __classPrivateFieldGet(this, _UserViewHandler_instances, "m", _UserViewHandler_getPlaylists).call(this, username)
     ]);
     const lists = [
+        ...liveStreamList,
         ...showList,
         ...playlistList
     ];
@@ -120,6 +129,28 @@ _UserViewHandler_instances = new WeakSet(), _UserViewHandler_browseUser = async 
             lists
         }
     };
+}, _UserViewHandler_getLiveStreamList = async function _UserViewHandler_getLiveStreamList(username) {
+    const liveStream = await this.getModel(model_1.ModelType.LiveStream).getLiveStream(username);
+    if (!liveStream) {
+        return [];
+    }
+    const rendered = this.getRenderer(renderers_1.RendererType.LiveStream).renderToListItem(liveStream, 'playLiveStreamItem');
+    if (!rendered) {
+        return [];
+    }
+    let title = MixcloudContext_1.default.getI18n('MIXCLOUD_LIVE_STREAMING_NOW');
+    if (UIHelper_1.default.supportsEnhancedTitles() && liveStream.description) {
+        title += UIHelper_1.default.wrapInDiv(liveStream.description, UIHelper_1.UI_STYLES.DESCRIPTION);
+        if (!liveStream.owner?.about) {
+            title += UIHelper_1.default.wrapInDiv(' ', 'padding-top: 18px;');
+        }
+        title = UIHelper_1.default.wrapInDiv(title, 'width: 100%;');
+    }
+    return [{
+            availableListViews: ['list'],
+            title,
+            items: [rendered]
+        }];
 }, _UserViewHandler_getShows = async function _UserViewHandler_getShows(username) {
     const cloudcastView = {
         name: 'cloudcasts',

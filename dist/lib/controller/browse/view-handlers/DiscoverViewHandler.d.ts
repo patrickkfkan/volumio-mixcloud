@@ -20,6 +20,6 @@ export default class DiscoverViewHandler<T extends DiscoverType = 'all'> extends
     };
     protected getTitle(selectedTags?: SlugEntity[], orderBy?: DiscoverResultsOrderBy<any>, country?: string): string;
     protected getDiscoverModelParams(): DiscoverModelDiscoverParams<any>;
-    protected getTracksOnExplode(): Promise<import("../../../entities/CloudcastEntity").CloudcastEntity[]>;
+    protected getStreamableEntitiesOnExplode(): Promise<import("../../../entities/CloudcastEntity").CloudcastEntity[]>;
 }
 //# sourceMappingURL=DiscoverViewHandler.d.ts.map

@@ -25,6 +25,9 @@ export interface UserView extends View {
 
   // Search options
   select?: 'dateJoined' | 'userType';
+
+  // For explode
+  playTarget?: 'liveStream';
 }
 
 export default class UserViewHandler extends ExplodableViewHandler<UserView> {
@@ -46,13 +49,15 @@ export default class UserViewHandler extends ExplodableViewHandler<UserView> {
   }
 
   async #browseUser(username: string) {
-    const [ user, showList, playlistList ] = await Promise.all([
+    const [ user, liveStreamList, showList, playlistList ] = await Promise.all([
       this.getModel(ModelType.User).getUser(username),
+      this.#getLiveStreamList(username),
       this.#getShows(username),
       this.#getPlaylists(username)
     ]);
 
     const lists: RenderedList[] = [
+      ...liveStreamList,
       ...showList,
       ...playlistList
     ];
@@ -98,6 +103,30 @@ export default class UserViewHandler extends ExplodableViewHandler<UserView> {
         lists
       }
     };
+  }
+
+  async #getLiveStreamList(username: string): Promise<RenderedList[]> {
+    const liveStream = await this.getModel(ModelType.LiveStream).getLiveStream(username);
+    if (!liveStream) {
+      return [];
+    }
+    const rendered = this.getRenderer(RendererType.LiveStream).renderToListItem(liveStream, 'playLiveStreamItem');
+    if (!rendered) {
+      return [];
+    }
+    let title = mixcloud.getI18n('MIXCLOUD_LIVE_STREAMING_NOW');
+    if (UIHelper.supportsEnhancedTitles() && liveStream.description) {
+      title += UIHelper.wrapInDiv(liveStream.description, UI_STYLES.DESCRIPTION);
+      if (!liveStream.owner?.about) {
+        title += UIHelper.wrapInDiv(' ', 'padding-top: 18px;');
+      }
+      title = UIHelper.wrapInDiv(title, 'width: 100%;');
+    }
+    return [ {
+      availableListViews: [ 'list' ],
+      title,
+      items: [ rendered ]
+    } ];
   }
 
   async #getShows(username: string) {
@@ -196,17 +225,24 @@ export default class UserViewHandler extends ExplodableViewHandler<UserView> {
     });
   }
 
-  protected async getTracksOnExplode() {
+  protected async getStreamableEntitiesOnExplode() {
     const view = this.currentView;
     if (!view.username) {
       throw Error('Operation not supported');
+    }
+
+    if (view.playTarget === 'liveStream') {
+      const liveStream = await this.getModel(ModelType.LiveStream).getLiveStream(view.username);
+      if (!liveStream) {
+        return [];
+      }
+      return liveStream;
     }
 
     const cloudcastParams: CloudcastModelGetCloudcastsParams = {
       username: view.username,
       limit: mixcloud.getConfigValue('itemsPerPage')
     };
-
     const cloudcasts = await this.getModel(ModelType.Cloudcast).getCloudcasts(cloudcastParams);
     return cloudcasts.items;
   }

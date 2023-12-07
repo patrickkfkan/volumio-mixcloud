@@ -65,7 +65,7 @@ class CloudcastViewHandler extends ExplodableViewHandler_1.default {
         }
         throw Error('Operation not supported');
     }
-    async getTracksOnExplode() {
+    async getStreamableEntitiesOnExplode() {
         const view = this.currentView;
         const model = this.getModel(model_1.ModelType.Cloudcast);
         if (view.cloudcastId) {

@@ -1,6 +1,7 @@
 import BaseViewHandler from './BaseViewHandler';
 import View from './View';
 import { CloudcastEntity } from '../../../entities/CloudcastEntity';
+import { LiveStreamEntity } from '../../../entities/LiveStreamEntity';
 export interface ExplodedTrackInfo {
     service: 'mixcloud';
     uri: string;
@@ -12,14 +13,11 @@ export interface ExplodedTrackInfo {
     duration?: number;
     samplerate?: string;
 }
-export default abstract class ExplodableViewHandler<V extends View, E extends CloudcastEntity = CloudcastEntity> extends BaseViewHandler<V> {
+export type StreamableEntity = CloudcastEntity | LiveStreamEntity;
+export default abstract class ExplodableViewHandler<V extends View> extends BaseViewHandler<V> {
+    #private;
     explode(): Promise<ExplodedTrackInfo[]>;
-    protected parseTrackForExplode(track: E): Promise<ExplodedTrackInfo | null>;
-    protected abstract getTracksOnExplode(): Promise<E | E[]>;
-    /**
-     * Track uri:
-     * mixcloud/cloudcast@cloudcastId={...}@owner={...}
-     */
-    protected getTrackUri(track: E): string | null;
+    protected convertStreamableEntityToExplodedTrackInfo(entity: StreamableEntity): Promise<ExplodedTrackInfo | null>;
+    protected abstract getStreamableEntitiesOnExplode(): Promise<StreamableEntity | StreamableEntity[]>;
 }
 //# sourceMappingURL=ExplodableViewHandler.d.ts.map

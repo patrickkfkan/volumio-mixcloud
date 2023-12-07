@@ -25,8 +25,13 @@ class UserRenderer extends BaseRenderer_1.default {
         return result;
     }
     renderToHeader(user) {
+        const view = { ...this.currentView };
+        if (view.name === 'user' && view.playTarget) {
+            delete view.playTarget;
+        }
+        const uri = ViewHelper_1.default.constructUriFromViews([...this.previousViews, view]);
         const result = {
-            uri: this.uri,
+            uri,
             service: 'mixcloud',
             type: 'song',
             title: user.name || user.username,

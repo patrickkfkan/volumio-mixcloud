@@ -15,7 +15,8 @@ export interface RootView extends View {
 export default class RootViewHandler extends BaseViewHandler<RootView> {
 
   async browse(): Promise<RenderedPage> {
-    const [ categories, featured ] = await Promise.all([
+    const [ liveStreams, categories, featured ] = await Promise.all([
+      this.#getLiveStreams(),
       this.#getCategories(),
       this.#getFeatured()
     ]);
@@ -24,6 +25,7 @@ export default class RootViewHandler extends BaseViewHandler<RootView> {
       navigation: {
         prev: { uri: '/' },
         lists: [
+          ...liveStreams,
           ...categories,
           ...featured
         ]
@@ -61,6 +63,13 @@ export default class RootViewHandler extends BaseViewHandler<RootView> {
 
   async #getFeatured() {
     const uri = `${this.uri}/featured@inSection=1`;
+    const handler = ViewHandlerFactory.getHandler(uri);
+    const page = await handler.browse();
+    return page.navigation?.lists || [];
+  }
+
+  async #getLiveStreams() {
+    const uri = `${this.uri}/liveStreams@inSection=1`;
     const handler = ViewHandlerFactory.getHandler(uri);
     const page = await handler.browse();
     return page.navigation?.lists || [];

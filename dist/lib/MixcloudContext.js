@@ -61,6 +61,21 @@ class MixcloudContext {
     getLogger() {
         return __classPrivateFieldGet(this, _MixcloudContext_pluginContext, "f").logger;
     }
+    getErrorMessage(message, error, stack = true) {
+        let result = message;
+        if (typeof error == 'object') {
+            if (error.message) {
+                result += ` ${error.message}`;
+            }
+            if (stack && error.stack) {
+                result += ` ${error.stack}`;
+            }
+        }
+        else if (typeof error == 'string') {
+            result += ` ${error}`;
+        }
+        return result.trim();
+    }
     getConfigValue(key) {
         const schema = PluginConfig_1.PLUGIN_CONFIG_SCHEMA[key];
         if (__classPrivateFieldGet(this, _MixcloudContext_pluginConfig, "f").has(key)) {

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class EntityConverter {
     static convertCloudcast(data) {
         return {
+            type: 'cloudcast',
             id: data.id,
             url: data.url,
             name: data.name,
@@ -24,6 +25,7 @@ class EntityConverter {
         }
         const location = locationParts.join(', ');
         return {
+            type: 'user',
             username: data.username,
             url: data.url,
             name: data.name,
@@ -34,6 +36,7 @@ class EntityConverter {
     }
     static convertPlaylist(data) {
         return {
+            type: 'playlist',
             id: data.id,
             name: data.name,
             description: data.description,
@@ -43,8 +46,22 @@ class EntityConverter {
     }
     static convertSlugLike(data) {
         return {
+            type: 'slug',
             name: data.name,
             slug: data.slug
+        };
+    }
+    static convertLiveStream(data) {
+        return {
+            type: 'liveStream',
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            status: data.status,
+            isLive: data.status === 'LIVE',
+            owner: data.owner ? this.convertUser(data.owner) : undefined,
+            thumbnail: data.images?.extra_large,
+            streams: data.streams
         };
     }
 }

@@ -299,7 +299,7 @@ export default class CloudcastViewHandler extends ExplodableViewHandler<Cloudcas
     };
   }
 
-  protected async getTracksOnExplode() {
+  protected async getStreamableEntitiesOnExplode() {
     const view = this.currentView;
     const model = this.getModel(ModelType.Cloudcast);
 

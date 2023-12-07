@@ -90,6 +90,9 @@ class BaseViewHandler {
                 case model_1.ModelType.User:
                     model = model_1.default.getInstance(model_1.ModelType.User);
                     break;
+                case model_1.ModelType.LiveStream:
+                    model = model_1.default.getInstance(model_1.ModelType.LiveStream);
+                    break;
                 default:
                     throw Error(`Unknown model type: ${type}`);
             }
@@ -112,6 +115,9 @@ class BaseViewHandler {
                     break;
                 case renderers_1.RendererType.User:
                     renderer = renderers_1.default.getInstance(renderers_1.RendererType.User, __classPrivateFieldGet(this, _BaseViewHandler_uri, "f"), __classPrivateFieldGet(this, _BaseViewHandler_currentView, "f"), __classPrivateFieldGet(this, _BaseViewHandler_previousViews, "f"));
+                    break;
+                case renderers_1.RendererType.LiveStream:
+                    renderer = renderers_1.default.getInstance(renderers_1.RendererType.LiveStream, __classPrivateFieldGet(this, _BaseViewHandler_uri, "f"), __classPrivateFieldGet(this, _BaseViewHandler_currentView, "f"), __classPrivateFieldGet(this, _BaseViewHandler_previousViews, "f"));
                     break;
                 default:
                     throw Error(`Unknown renderer type: ${type}`);
