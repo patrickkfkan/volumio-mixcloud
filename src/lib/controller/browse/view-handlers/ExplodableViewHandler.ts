@@ -79,7 +79,7 @@ export default abstract class ExplodableViewHandler<V extends View> extends Base
       return null;
     }
 
-    // Track URI: mixcloud/livestream@usernamer={...}
+    // Track URI: mixcloud/livestream@username={...}
     const liveStreamView: LiveStreamView = {
       name: 'liveStream',
       username: liveStream.owner.username

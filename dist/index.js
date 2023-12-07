@@ -205,15 +205,21 @@ class ControllerMixcloud {
             try {
                 const views = ViewHelper_1.default.getViewsFromUri(data.uri);
                 const trackView = views.pop();
-                if (!trackView || trackView.name !== 'cloudcast') {
-                    return __classPrivateFieldGet(this, _ControllerMixcloud_browseController, "f").browseUri('mixcloud');
-                }
-                if (data.type === 'artist' && trackView.owner) {
-                    const userView = {
-                        name: 'user',
-                        username: trackView.owner
-                    };
-                    return __classPrivateFieldGet(this, _ControllerMixcloud_browseController, "f").browseUri(`mixcloud/${ViewHelper_1.default.constructUriSegmentFromView(userView)}`);
+                if (trackView && data.type === 'artist') {
+                    let username = null;
+                    if (trackView.name === 'cloudcast' && trackView.owner) {
+                        username = trackView.owner;
+                    }
+                    else if (trackView.name === 'liveStream' && trackView.username) {
+                        username = trackView.username;
+                    }
+                    if (username) {
+                        const userView = {
+                            name: 'user',
+                            username
+                        };
+                        return __classPrivateFieldGet(this, _ControllerMixcloud_browseController, "f").browseUri(`mixcloud/${ViewHelper_1.default.constructUriSegmentFromView(userView)}`);
+                    }
                 }
                 return __classPrivateFieldGet(this, _ControllerMixcloud_browseController, "f").browseUri('mixcloud');
             }

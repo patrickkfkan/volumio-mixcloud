@@ -63,7 +63,7 @@ _ExplodableViewHandler_instances = new WeakSet(), _ExplodableViewHandler_convert
     if (!liveStream.owner) {
         return null;
     }
-    // Track URI: mixcloud/livestream@usernamer={...}
+    // Track URI: mixcloud/livestream@username={...}
     const liveStreamView = {
         name: 'liveStream',
         username: liveStream.owner.username

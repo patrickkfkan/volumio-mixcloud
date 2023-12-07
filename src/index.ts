@@ -251,19 +251,24 @@ class ControllerMixcloud {
       try {
         const views = ViewHelper.getViewsFromUri(data.uri);
         const trackView = views.pop();
-        if (!trackView || trackView.name !== 'cloudcast') {
-          return this.#browseController.browseUri('mixcloud');
-        }
-        if (data.type === 'artist' && trackView.owner) {
-          const userView: UserView = {
-            name: 'user',
-            username: trackView.owner
-          };
-          return this.#browseController.browseUri(`mixcloud/${ViewHelper.constructUriSegmentFromView(userView)}`);
+        if (trackView && data.type === 'artist') {
+          let username: string | null = null;
+          if (trackView.name === 'cloudcast' && trackView.owner) {
+            username = trackView.owner;
+          }
+          else if (trackView.name === 'liveStream' && trackView.username) {
+            username = trackView.username;
+          }
+          if (username) {
+            const userView: UserView = {
+              name: 'user',
+              username
+            };
+            return this.#browseController.browseUri(`mixcloud/${ViewHelper.constructUriSegmentFromView(userView)}`);
+          }
         }
 
         return this.#browseController.browseUri('mixcloud');
-
       }
       catch (error: any) {
         throw Error(`Failed to fetch requested info: ${error.message}`);

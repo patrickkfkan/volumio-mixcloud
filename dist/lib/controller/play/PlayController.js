@@ -57,7 +57,7 @@ class PlayController {
     /**
      * Track uri:
      * - mixcloud/cloudcast@cloudcastId={...}@owner={...}
-     * - mixcloud/livestream@usernamer={...}
+     * - mixcloud/livestream@username={...}
      */
     async clearAddPlayTrack(track) {
         MixcloudContext_1.default.getLogger().info(`[mixcloud] clearAddPlayTrack: ${track.uri}`);
