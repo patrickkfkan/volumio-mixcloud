@@ -1,6 +1,6 @@
 {
 	"name": "mixcloud",
-	"version": "0.1.3",
+	"version": "1.0.0",
 	"description": "Listen to Mixcloud shows",
 	"main": "./dist/index.js",
 	"scripts": {
