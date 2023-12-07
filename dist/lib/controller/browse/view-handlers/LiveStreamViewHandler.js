@@ -13,6 +13,7 @@ const MixcloudContext_1 = __importDefault(require("../../../MixcloudContext"));
 const model_1 = require("../../../model");
 const ExplodableViewHandler_1 = __importDefault(require("./ExplodableViewHandler"));
 const renderers_1 = require("./renderers");
+const UIHelper_1 = __importDefault(require("../../../util/UIHelper"));
 class LiveStreamViewHandler extends ExplodableViewHandler_1.default {
     constructor() {
         super(...arguments);
@@ -62,7 +63,7 @@ _LiveStreamViewHandler_instances = new WeakSet(), _LiveStreamViewHandler_browseL
             lists.push(optionList);
         }
         lists.push(__classPrivateFieldGet(this, _LiveStreamViewHandler_instances, "m", _LiveStreamViewHandler_getLiveStreamList).call(this, liveStreams));
-        lists[0].title = MixcloudContext_1.default.getI18n('MIXCLOUD_LIVE_STREAMING_NOW');
+        lists[0].title = UIHelper_1.default.addMixcloudIconToListTitle(MixcloudContext_1.default.getI18n('MIXCLOUD_LIVE_STREAMING_NOW'));
     }
     return {
         navigation: {

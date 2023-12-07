@@ -8,6 +8,7 @@ import { RendererType } from './renderers';
 import { LoopFetchResult } from '../../../model/BaseModel';
 import { LiveStreamModelGetLiveStreamsParams, LiveStreamOrderBy } from '../../../model/LiveStreamModel';
 import { LiveStreamEntity } from '../../../entities/LiveStreamEntity';
+import UIHelper from '../../../util/UIHelper';
 
 export interface LiveStreamView extends View {
   name: 'liveStream' | 'liveStreams';
@@ -62,7 +63,7 @@ export default class LiveStreamViewHandler extends ExplodableViewHandler<LiveStr
 
       lists.push(this.#getLiveStreamList(liveStreams));
 
-      lists[0].title = mixcloud.getI18n('MIXCLOUD_LIVE_STREAMING_NOW');
+      lists[0].title = UIHelper.addMixcloudIconToListTitle(mixcloud.getI18n('MIXCLOUD_LIVE_STREAMING_NOW'));
     }
 
     return {
