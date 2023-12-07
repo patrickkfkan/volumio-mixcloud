@@ -15,6 +15,9 @@ The purpose of this plugin is to allow you to discover shows and content creator
 
 ## Changelog
 
+1.0.1
+- Fix live stream pagination
+
 1.0.0
 - Rewrite in TypeScript
 - Add live stream support
