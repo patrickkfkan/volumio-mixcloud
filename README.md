@@ -15,6 +15,9 @@ The purpose of this plugin is to allow you to discover shows and content creator
 
 ## Changelog
 
+2.0.0
+- Release for Bookworm-based Volumio
+
 1.0.1
 - Fix live stream pagination
 
