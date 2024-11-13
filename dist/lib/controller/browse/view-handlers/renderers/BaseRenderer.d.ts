@@ -1,4 +1,4 @@
-import View from '../View';
+import type View from '../View';
 export interface RenderedListItem {
     service: 'mixcloud';
     type: 'folder' | 'song' | 'item-no-menu';

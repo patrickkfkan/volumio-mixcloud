@@ -1,7 +1,7 @@
-import View from './View';
-import { RenderedPage } from './ViewHandler';
-import { DiscoverModelDiscoverParams, DiscoverResultsOrderBy, DiscoverType } from '../../../model/DiscoverModel';
-import { SlugEntity } from '../../../entities/SlugEntity';
+import type View from './View';
+import { type RenderedPage } from './ViewHandler';
+import { type DiscoverModelDiscoverParams, type DiscoverResultsOrderBy, type DiscoverType } from '../../../model/DiscoverModel';
+import { type SlugEntity } from '../../../entities/SlugEntity';
 import ExplodableViewHandler from './ExplodableViewHandler';
 export interface DiscoverView<T extends DiscoverType = 'all'> extends View {
     name: T extends 'all' ? 'discover' : T extends 'featured' ? 'featured' : never;

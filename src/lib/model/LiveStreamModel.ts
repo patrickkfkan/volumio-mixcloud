@@ -1,8 +1,8 @@
-import mcfetch, { LiveStreamAPI, LiveStreamAPIGetCurrentParams, LiveStream } from 'mixcloud-fetch';
+import mcfetch, { type LiveStreamAPI, type LiveStreamAPIGetCurrentParams, type LiveStream } from 'mixcloud-fetch';
 import mixcloud from '../MixcloudContext';
-import BaseModel, { CommonModelPaginationParams, LoopFetchResult, OptionBundle } from './BaseModel';
+import BaseModel, { type CommonModelPaginationParams, type LoopFetchResult, type OptionBundle } from './BaseModel';
 import EntityConverter from '../util/EntityConverter';
-import { LiveStreamEntity } from '../entities/LiveStreamEntity';
+import { type LiveStreamEntity } from '../entities/LiveStreamEntity';
 
 export type LiveStreamOrderBy = NonNullable<LiveStreamAPIGetCurrentParams['orderBy']>;
 

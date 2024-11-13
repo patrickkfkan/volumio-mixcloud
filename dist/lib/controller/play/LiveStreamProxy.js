@@ -70,60 +70,62 @@ class LiveStreamProxy {
         __classPrivateFieldSet(this, _LiveStreamProxy_isRunning, false, "f");
     }
     start() {
-        return new Promise(async (resolve, reject) => {
-            const port = await (0, get_port_1.default)();
-            const cmd = CMD_TEMPLATE
-                .replace('{LIVE_STREAM_HLS_URL}', __classPrivateFieldGet(this, _LiveStreamProxy_liveStreamHLSUrl, "f"))
-                .replace('{PORT}', String(port));
-            const s = (0, child_process_1.spawn)(cmd, { uid: 1000, gid: 1000, shell: true });
-            const pid = s.pid;
-            let lastError = null;
-            const preStartErrors = [];
-            MixcloudContext_1.default.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process spawned for cmd: ${cmd}`);
-            const portMonitor = new PortMonitor(port);
-            portMonitor
-                .once('bind', () => {
-                __classPrivateFieldSet(this, _LiveStreamProxy_isRunning, true, "f");
-                resolve(`${PROXY_URL}:${port}`);
-            })
-                .start();
-            /**
-             * Streamlink piped to ffmpeg with --stdout, so all original stdout
-             * messages from Streamlink get sent to stderr instead.
-             */
-            s.stderr.on('data', (msg) => {
-                const _msg = msg.toString();
-                MixcloudContext_1.default.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: ${_msg}`);
-                if (!__classPrivateFieldGet(this, _LiveStreamProxy_isRunning, "f") && _msg.toLowerCase().includes('error:')) {
-                    preStartErrors.push(_msg);
-                }
-            });
-            s.stdout.on('data', (msg) => {
-                const _msg = msg.toString();
-                MixcloudContext_1.default.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: ${_msg}`);
-            });
-            s.on('close', (code, signal) => {
-                MixcloudContext_1.default.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process closed - code: ${code}, signal: ${signal}`);
-                if (!__classPrivateFieldGet(this, _LiveStreamProxy_isRunning, "f")) {
-                    if (lastError) {
-                        reject(lastError);
+        return new Promise((resolve, reject) => {
+            void (async () => {
+                const port = await (0, get_port_1.default)();
+                const cmd = CMD_TEMPLATE
+                    .replace('{LIVE_STREAM_HLS_URL}', __classPrivateFieldGet(this, _LiveStreamProxy_liveStreamHLSUrl, "f"))
+                    .replace('{PORT}', String(port));
+                const s = (0, child_process_1.spawn)(cmd, { uid: 1000, gid: 1000, shell: true });
+                const pid = s.pid;
+                let lastError = null;
+                const preStartErrors = [];
+                MixcloudContext_1.default.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process spawned for cmd: ${cmd}`);
+                const portMonitor = new PortMonitor(port);
+                portMonitor
+                    .once('bind', () => {
+                    __classPrivateFieldSet(this, _LiveStreamProxy_isRunning, true, "f");
+                    resolve(`${PROXY_URL}:${port}`);
+                })
+                    .start();
+                /**
+                 * Streamlink piped to ffmpeg with --stdout, so all original stdout
+                 * messages from Streamlink get sent to stderr instead.
+                 */
+                s.stderr.on('data', (msg) => {
+                    const _msg = msg.toString();
+                    MixcloudContext_1.default.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: ${_msg}`);
+                    if (!__classPrivateFieldGet(this, _LiveStreamProxy_isRunning, "f") && _msg.toLowerCase().includes('error:')) {
+                        preStartErrors.push(_msg);
                     }
-                    else if (preStartErrors.length > 0) {
-                        reject(Error(preStartErrors.join(os_1.EOL)));
+                });
+                s.stdout.on('data', (msg) => {
+                    const _msg = msg.toString();
+                    MixcloudContext_1.default.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: ${_msg}`);
+                });
+                s.on('close', (code, signal) => {
+                    MixcloudContext_1.default.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process closed - code: ${code}, signal: ${signal}`);
+                    if (!__classPrivateFieldGet(this, _LiveStreamProxy_isRunning, "f")) {
+                        if (lastError) {
+                            reject(lastError);
+                        }
+                        else if (preStartErrors.length > 0) {
+                            reject(Error(preStartErrors.join(os_1.EOL)));
+                        }
+                        else {
+                            reject(Error('Unknown cause'));
+                        }
                     }
-                    else {
-                        reject(Error('Unknown cause'));
-                    }
-                }
-                portMonitor.stop();
-                portMonitor.removeAllListeners();
-                __classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_reset).call(this);
-            });
-            s.on('error', (err) => {
-                MixcloudContext_1.default.getLogger().error(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process error: ${err.message}`);
-                lastError = err;
-            });
-            __classPrivateFieldSet(this, _LiveStreamProxy_process, s, "f");
+                    portMonitor.stop();
+                    portMonitor.removeAllListeners();
+                    __classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_reset).call(this);
+                });
+                s.on('error', (err) => {
+                    MixcloudContext_1.default.getLogger().error(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process error: ${err.message}`);
+                    lastError = err;
+                });
+                __classPrivateFieldSet(this, _LiveStreamProxy_process, s, "f");
+            })();
         });
     }
     /**
@@ -141,40 +143,45 @@ class LiveStreamProxy {
             return;
         }
         const proc = __classPrivateFieldGet(this, _LiveStreamProxy_process, "f");
-        return new Promise(async (resolve) => {
-            let tree;
-            try {
-                tree = await (0, pidtree_1.default)(proc.pid, { root: true });
-            }
-            catch (error) {
-                MixcloudContext_1.default.getLogger().warn(MixcloudContext_1.default.getErrorMessage('[mixcloud] LiveStreamProxy: failed to obtain PID tree for killing - resolving anyway: ', error));
-                __classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_reset).call(this);
-                resolve();
-                return;
-            }
-            let cleanKill = true;
-            let pid = tree.shift();
-            while (pid) {
+        return new Promise((resolve) => {
+            void (async () => {
+                let tree;
                 try {
-                    if (__classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_pidExists).call(this, pid)) {
-                        MixcloudContext_1.default.getLogger().info(`[mixcloud] LiveStreamProxy: killing PID ${pid}`);
-                        __classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_sigkill).call(this, pid);
+                    if (proc.pid === undefined) {
+                        throw Error('proc.pid is undefined');
                     }
+                    tree = await (0, pidtree_1.default)(proc.pid, { root: true });
                 }
                 catch (error) {
-                    MixcloudContext_1.default.getLogger().warn(MixcloudContext_1.default.getErrorMessage(`[mixcloud] LiveStreamProxy: error killing PID ${pid} - proceeding anyway: `, error));
-                    cleanKill = false;
+                    MixcloudContext_1.default.getLogger().warn(MixcloudContext_1.default.getErrorMessage('[mixcloud] LiveStreamProxy: failed to obtain PID tree for killing - resolving anyway: ', error));
+                    __classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_reset).call(this);
+                    resolve();
+                    return;
                 }
-                pid = tree.shift();
-            }
-            __classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_reset).call(this);
-            if (cleanKill) {
-                MixcloudContext_1.default.getLogger().info('[mixcloud] LiveStreamProxy killed');
-            }
-            else {
-                MixcloudContext_1.default.getLogger().warn('[mixcloud] LiveStreamProxy killed uncleanly - there may be zombie processes left behind.');
-            }
-            resolve();
+                let cleanKill = true;
+                let pid = tree.shift();
+                while (pid) {
+                    try {
+                        if (__classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_pidExists).call(this, pid)) {
+                            MixcloudContext_1.default.getLogger().info(`[mixcloud] LiveStreamProxy: killing PID ${pid}`);
+                            __classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_sigkill).call(this, pid);
+                        }
+                    }
+                    catch (error) {
+                        MixcloudContext_1.default.getLogger().warn(MixcloudContext_1.default.getErrorMessage(`[mixcloud] LiveStreamProxy: error killing PID ${pid} - proceeding anyway: `, error));
+                        cleanKill = false;
+                    }
+                    pid = tree.shift();
+                }
+                __classPrivateFieldGet(this, _LiveStreamProxy_instances, "m", _LiveStreamProxy_reset).call(this);
+                if (cleanKill) {
+                    MixcloudContext_1.default.getLogger().info('[mixcloud] LiveStreamProxy killed');
+                }
+                else {
+                    MixcloudContext_1.default.getLogger().warn('[mixcloud] LiveStreamProxy killed uncleanly - there may be zombie processes left behind.');
+                }
+                resolve();
+            })();
         });
     }
 }
@@ -211,14 +218,16 @@ class PortMonitor extends events_1.EventEmitter {
         if (__classPrivateFieldGet(this, _PortMonitor_checkTimer, "f")) {
             return;
         }
-        __classPrivateFieldSet(this, _PortMonitor_checkTimer, setTimeout(async () => {
-            __classPrivateFieldGet(this, _PortMonitor_instances, "m", _PortMonitor_clearTimer).call(this);
-            if (!(await __classPrivateFieldGet(this, _PortMonitor_instances, "m", _PortMonitor_isPortAvailable).call(this))) {
-                this.emit('bind');
-            }
-            else {
-                this.start();
-            }
+        __classPrivateFieldSet(this, _PortMonitor_checkTimer, setTimeout(() => {
+            void (async () => {
+                __classPrivateFieldGet(this, _PortMonitor_instances, "m", _PortMonitor_clearTimer).call(this);
+                if (!(await __classPrivateFieldGet(this, _PortMonitor_instances, "m", _PortMonitor_isPortAvailable).call(this))) {
+                    this.emit('bind');
+                }
+                else {
+                    this.start();
+                }
+            })();
         }, 500), "f");
     }
     stop() {

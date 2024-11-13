@@ -33,7 +33,7 @@ class Model {
         if (MODEL_TYPE_TO_CLASS[type]) {
             return new MODEL_TYPE_TO_CLASS[type]();
         }
-        throw Error(`Model not found for type ${ModelType}`);
+        throw Error(`Model not found for type ${String(type)}`);
     }
     static reset() {
         this.clearLibCache();

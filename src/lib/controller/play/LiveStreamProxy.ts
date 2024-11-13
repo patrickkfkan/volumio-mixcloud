@@ -1,4 +1,4 @@
-import { ChildProcess, spawn } from 'child_process';
+import { type ChildProcess, spawn } from 'child_process';
 import net from 'net';
 import { EOL } from 'os';
 import { EventEmitter } from 'events';
@@ -60,68 +60,70 @@ export default class LiveStreamProxy {
   }
 
   start() {
-    return new Promise<string>(async (resolve, reject) => {
-      const port = await getPort();
-      const cmd = CMD_TEMPLATE
-        .replace('{LIVE_STREAM_HLS_URL}', this.#liveStreamHLSUrl)
-        .replace('{PORT}', String(port));
-      const s = spawn(cmd, { uid: 1000, gid: 1000, shell: true });
-      const pid = s.pid;
-      let lastError: Error | null = null;
-      const preStartErrors: string[] = [];
-
-      mixcloud.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process spawned for cmd: ${cmd}`);
-
-      const portMonitor = new PortMonitor(port);
-      portMonitor
-        .once('bind', () => {
-          this.#isRunning = true;
-          resolve(`${PROXY_URL}:${port}`);
-        })
-        .start();
-
-      /**
-       * Streamlink piped to ffmpeg with --stdout, so all original stdout
-       * messages from Streamlink get sent to stderr instead.
-       */
-
-      s.stderr.on('data', (msg) => {
-        const _msg = msg.toString() as string;
-        mixcloud.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: ${_msg}`);
-        if (!this.#isRunning && _msg.toLowerCase().includes('error:')) {
-          preStartErrors.push(_msg);
-        }
-      });
-
-      s.stdout.on('data', (msg) => {
-        const _msg = msg.toString();
-        mixcloud.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: ${_msg}`);
-      });
-
-      s.on('close', (code, signal) => {
-        mixcloud.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process closed - code: ${code}, signal: ${signal}`);
-        if (!this.#isRunning) {
-          if (lastError) {
-            reject(lastError);
+    return new Promise<string>((resolve, reject) => {
+      void(async () => {
+        const port = await getPort();
+        const cmd = CMD_TEMPLATE
+          .replace('{LIVE_STREAM_HLS_URL}', this.#liveStreamHLSUrl)
+          .replace('{PORT}', String(port));
+        const s = spawn(cmd, { uid: 1000, gid: 1000, shell: true });
+        const pid = s.pid;
+        let lastError: Error | null = null;
+        const preStartErrors: string[] = [];
+  
+        mixcloud.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process spawned for cmd: ${cmd}`);
+  
+        const portMonitor = new PortMonitor(port);
+        portMonitor
+          .once('bind', () => {
+            this.#isRunning = true;
+            resolve(`${PROXY_URL}:${port}`);
+          })
+          .start();
+  
+        /**
+         * Streamlink piped to ffmpeg with --stdout, so all original stdout
+         * messages from Streamlink get sent to stderr instead.
+         */
+  
+        s.stderr.on('data', (msg) => {
+          const _msg = msg.toString() as string;
+          mixcloud.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: ${_msg}`);
+          if (!this.#isRunning && _msg.toLowerCase().includes('error:')) {
+            preStartErrors.push(_msg);
           }
-          else if (preStartErrors.length > 0) {
-            reject(Error(preStartErrors.join(EOL)));
+        });
+  
+        s.stdout.on('data', (msg) => {
+          const _msg = msg.toString();
+          mixcloud.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: ${_msg}`);
+        });
+  
+        s.on('close', (code, signal) => {
+          mixcloud.getLogger().info(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process closed - code: ${code}, signal: ${signal}`);
+          if (!this.#isRunning) {
+            if (lastError) {
+              reject(lastError);
+            }
+            else if (preStartErrors.length > 0) {
+              reject(Error(preStartErrors.join(EOL)));
+            }
+            else {
+              reject(Error('Unknown cause'));
+            }
           }
-          else {
-            reject(Error('Unknown cause'));
-          }
-        }
-        portMonitor.stop();
-        portMonitor.removeAllListeners();
-        this.#reset();
-      });
-
-      s.on('error', (err) => {
-        mixcloud.getLogger().error(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process error: ${err.message}`);
-        lastError = err;
-      });
-
-      this.#process = s;
+          portMonitor.stop();
+          portMonitor.removeAllListeners();
+          this.#reset();
+        });
+  
+        s.on('error', (err) => {
+          mixcloud.getLogger().error(`[mixcloud] (PID: ${pid}) LiveStreamProxy: process error: ${err.message}`);
+          lastError = err;
+        });
+  
+        this.#process = s;
+      })();
     });
   }
 
@@ -140,42 +142,47 @@ export default class LiveStreamProxy {
       return;
     }
     const proc = this.#process;
-    return new Promise<void>(async (resolve) => {
-      let tree: number[];
-      try {
-        tree = await pidtree(proc.pid, { root: true });
-      }
-      catch (error) {
-        mixcloud.getLogger().warn(
-          mixcloud.getErrorMessage('[mixcloud] LiveStreamProxy: failed to obtain PID tree for killing - resolving anyway: ', error));
-        this.#reset();
-        resolve();
-        return;
-      }
-      let cleanKill = true;
-      let pid = tree.shift();
-      while (pid) {
+    return new Promise<void>((resolve) => {
+      void(async () => {
+        let tree: number[];
         try {
-          if (this.#pidExists(pid)) {
-            mixcloud.getLogger().info(`[mixcloud] LiveStreamProxy: killing PID ${pid}`);
-            this.#sigkill(pid);
+          if (proc.pid === undefined) {
+            throw Error('proc.pid is undefined');
           }
+          tree = await pidtree(proc.pid, { root: true });
         }
         catch (error) {
           mixcloud.getLogger().warn(
-            mixcloud.getErrorMessage(`[mixcloud] LiveStreamProxy: error killing PID ${pid} - proceeding anyway: `, error));
-          cleanKill = false;
+            mixcloud.getErrorMessage('[mixcloud] LiveStreamProxy: failed to obtain PID tree for killing - resolving anyway: ', error));
+          this.#reset();
+          resolve();
+          return;
         }
-        pid = tree.shift();
-      }
-      this.#reset();
-      if (cleanKill) {
-        mixcloud.getLogger().info('[mixcloud] LiveStreamProxy killed');
-      }
-      else {
-        mixcloud.getLogger().warn('[mixcloud] LiveStreamProxy killed uncleanly - there may be zombie processes left behind.');
-      }
-      resolve();
+        let cleanKill = true;
+        let pid = tree.shift();
+        while (pid) {
+          try {
+            if (this.#pidExists(pid)) {
+              mixcloud.getLogger().info(`[mixcloud] LiveStreamProxy: killing PID ${pid}`);
+              this.#sigkill(pid);
+            }
+          }
+          catch (error) {
+            mixcloud.getLogger().warn(
+              mixcloud.getErrorMessage(`[mixcloud] LiveStreamProxy: error killing PID ${pid} - proceeding anyway: `, error));
+            cleanKill = false;
+          }
+          pid = tree.shift();
+        }
+        this.#reset();
+        if (cleanKill) {
+          mixcloud.getLogger().info('[mixcloud] LiveStreamProxy killed');
+        }
+        else {
+          mixcloud.getLogger().warn('[mixcloud] LiveStreamProxy killed uncleanly - there may be zombie processes left behind.');
+        }
+        resolve();
+      })();
     });
   }
 
@@ -220,14 +227,16 @@ class PortMonitor extends EventEmitter {
       return;
     }
 
-    this.#checkTimer = setTimeout(async () => {
-      this.#clearTimer();
-      if (!(await this.#isPortAvailable())) {
-        this.emit('bind');
-      }
-      else {
-        this.start();
-      }
+    this.#checkTimer = setTimeout(() => {
+      void(async () => {
+        this.#clearTimer();
+        if (!(await this.#isPortAvailable())) {
+          this.emit('bind');
+        }
+        else {
+          this.start();
+        }
+      })();
     }, 500);
   }
 

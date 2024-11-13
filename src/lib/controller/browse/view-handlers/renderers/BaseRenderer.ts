@@ -1,4 +1,4 @@
-import View from '../View';
+import type View from '../View';
 
 export interface RenderedListItem {
   service: 'mixcloud';
@@ -40,7 +40,7 @@ export default abstract class BaseRenderer<T> {
 
   abstract renderToListItem(data: T, ...args: any[]): RenderedListItem | null;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   renderToHeader(data: T): RenderedHeader | null {
     return null;
   }

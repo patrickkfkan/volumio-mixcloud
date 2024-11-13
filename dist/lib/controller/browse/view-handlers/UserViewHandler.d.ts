@@ -1,7 +1,7 @@
-import View from './View';
-import { RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedPage } from './ViewHandler';
 import ExplodableViewHandler from './ExplodableViewHandler';
-import { UserModelGetUsersParams } from '../../../model/UserModel';
+import { type UserModelGetUsersParams } from '../../../model/UserModel';
 export interface UserView extends View {
     name: 'user' | 'users';
     username?: string;

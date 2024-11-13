@@ -1,10 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 import slugify from 'slugify';
-import BaseRenderer, { RenderedListItem } from './BaseRenderer';
-import { SlugEntity } from '../../../../entities/SlugEntity';
+import BaseRenderer, { type RenderedListItem } from './BaseRenderer';
+import { type SlugEntity } from '../../../../entities/SlugEntity';
 import UIHelper from '../../../../util/UIHelper';
-import { DiscoverView } from '../DiscoverViewHandler';
+import { type DiscoverView } from '../DiscoverViewHandler';
 import ViewHelper from '../ViewHelper';
 
 export default class SlugRenderer extends BaseRenderer<SlugEntity> {

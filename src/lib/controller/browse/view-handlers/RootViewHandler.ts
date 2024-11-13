@@ -2,11 +2,11 @@ import mixcloud from '../../../MixcloudContext';
 import { ModelType } from '../../../model';
 import UIHelper, { UI_STYLES } from '../../../util/UIHelper';
 import BaseViewHandler from './BaseViewHandler';
-import View from './View';
-import { RenderedList, RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedList, type RenderedPage } from './ViewHandler';
 import ViewHandlerFactory from './ViewHandlerFactory';
 import { RendererType } from './renderers';
-import { RenderedListItem } from './renderers/BaseRenderer';
+import { type RenderedListItem } from './renderers/BaseRenderer';
 
 export interface RootView extends View {
   name: 'root';

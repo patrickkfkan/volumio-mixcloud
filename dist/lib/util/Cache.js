@@ -47,9 +47,11 @@ class Cache {
         }
         __classPrivateFieldSet(this, _Cache_maxEntries, maxEntries, "f");
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
     get(key) {
         return __classPrivateFieldGet(this, _Cache_cache, "f").get(key);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
     put(key, value) {
         const keys = __classPrivateFieldGet(this, _Cache_cache, "f").keys();
         if (keys.length === __classPrivateFieldGet(this, _Cache_maxEntries, "f")) {

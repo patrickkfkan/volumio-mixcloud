@@ -1,9 +1,9 @@
-import mcfetch, { Cloudcast, TagAPI, TagAPIGetFeaturedParams, TagAPIGetShowsParams } from 'mixcloud-fetch';
+import mcfetch, { type Cloudcast, type TagAPI, type TagAPIGetFeaturedParams, type TagAPIGetShowsParams } from 'mixcloud-fetch';
 import mixcloud from '../MixcloudContext';
-import BaseModel, { CommonModelPaginationParams, LoopFetchResult, OptionBundle, OptionBundleEntry } from './BaseModel';
+import BaseModel, { type CommonModelPaginationParams, type LoopFetchResult, type OptionBundle, type OptionBundleEntry } from './BaseModel';
 import EntityConverter from '../util/EntityConverter';
-import { CloudcastEntity } from '../entities/CloudcastEntity';
-import { SlugEntity } from '../entities/SlugEntity';
+import { type CloudcastEntity } from '../entities/CloudcastEntity';
+import { type SlugEntity } from '../entities/SlugEntity';
 
 export type DiscoverType = 'all' | 'featured';
 
@@ -81,7 +81,7 @@ export default class DiscoverModel extends BaseModel {
           pageToken: params.pageToken
         };
         switch (params.list) {
-          case 'all':
+          case 'all': {
             const fetchedAll = await mcfetch.tag(params.slug || '').getShows({
               orderBy: params.orderBy,
               country: params.country,
@@ -91,7 +91,8 @@ export default class DiscoverModel extends BaseModel {
               throw Error(`Tag '${params.slug}' not found`);
             }
             return fetchedAll;
-          case 'featured':
+          }
+          case 'featured': {
             const fetchedFeatured = await mcfetch.tag(params.slug || '').getFeatured({
               orderBy: params.orderBy,
               ...paginationParams
@@ -100,6 +101,7 @@ export default class DiscoverModel extends BaseModel {
               throw Error(`Tag '${params.slug}' not found`);
             }
             return fetchedFeatured;
+          }
         }
       });
   }

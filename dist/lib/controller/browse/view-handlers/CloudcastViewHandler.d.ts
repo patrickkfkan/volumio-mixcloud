@@ -1,7 +1,7 @@
-import { CloudcastModelGetCloudcastsParams } from '../../../model/CloudcastModel';
+import { type CloudcastModelGetCloudcastsParams } from '../../../model/CloudcastModel';
 import ExplodableViewHandler from './ExplodableViewHandler';
-import View from './View';
-import { RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedPage } from './ViewHandler';
 export interface CloudcastView extends View {
     name: 'cloudcast' | 'cloudcasts';
     cloudcastId?: string;

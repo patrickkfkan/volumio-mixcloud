@@ -56,8 +56,8 @@ class BaseViewHandler {
         __classPrivateFieldSet(this, _BaseViewHandler_models, {}, "f");
         __classPrivateFieldSet(this, _BaseViewHandler_renderers, {}, "f");
     }
-    async browse() {
-        return {};
+    browse() {
+        return Promise.resolve({});
     }
     explode() {
         throw Error('Operation not supported');
@@ -94,7 +94,7 @@ class BaseViewHandler {
                     model = model_1.default.getInstance(model_1.ModelType.LiveStream);
                     break;
                 default:
-                    throw Error(`Unknown model type: ${type}`);
+                    throw Error(`Unknown model type: ${String(type)}`);
             }
             __classPrivateFieldGet(this, _BaseViewHandler_models, "f")[type] = model;
         }
@@ -120,7 +120,7 @@ class BaseViewHandler {
                     renderer = renderers_1.default.getInstance(renderers_1.RendererType.LiveStream, __classPrivateFieldGet(this, _BaseViewHandler_uri, "f"), __classPrivateFieldGet(this, _BaseViewHandler_currentView, "f"), __classPrivateFieldGet(this, _BaseViewHandler_previousViews, "f"));
                     break;
                 default:
-                    throw Error(`Unknown renderer type: ${type}`);
+                    throw Error(`Unknown renderer type: ${String(type)}`);
             }
             __classPrivateFieldGet(this, _BaseViewHandler_renderers, "f")[type] = renderer;
         }

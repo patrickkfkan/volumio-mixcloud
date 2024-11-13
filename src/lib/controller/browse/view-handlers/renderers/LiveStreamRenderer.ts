@@ -1,9 +1,9 @@
-import BaseRenderer, { RenderedListItem } from './BaseRenderer';
-import { LiveStreamEntity } from '../../../../entities/LiveStreamEntity';
+import BaseRenderer, { type RenderedListItem } from './BaseRenderer';
+import { type LiveStreamEntity } from '../../../../entities/LiveStreamEntity';
 import mixcloud from '../../../../MixcloudContext';
 import ViewHelper from '../ViewHelper';
-import { UserView } from '../UserViewHandler';
-import { LiveStreamView } from '../LiveStreamViewHandler';
+import { type UserView } from '../UserViewHandler';
+import { type LiveStreamView } from '../LiveStreamViewHandler';
 
 export default class LiveStreamRenderer extends BaseRenderer<LiveStreamEntity> {
 
@@ -25,7 +25,7 @@ export default class LiveStreamRenderer extends BaseRenderer<LiveStreamEntity> {
     let uri: string;
 
     switch (asType) {
-      case 'folder':
+      case 'folder': {
         type = 'folder';
         title = liveStream.name;
         album = mixcloud.getI18n('MIXCLOUD_LIVE_STREAM');
@@ -39,8 +39,8 @@ export default class LiveStreamRenderer extends BaseRenderer<LiveStreamEntity> {
         };
         uri = `${this.uri}/${ViewHelper.constructUriSegmentFromView(userView)}`;
         break;
-
-      case 'playLiveStreamItem':
+      }
+      case 'playLiveStreamItem': {
         const liveStreamView: LiveStreamView = {
           name: 'liveStream',
           username: liveStream.owner.username
@@ -52,6 +52,7 @@ export default class LiveStreamRenderer extends BaseRenderer<LiveStreamEntity> {
         albumart = liveStream.thumbnail;
         uri = playUri;
         break;
+      }
     }
 
     return {

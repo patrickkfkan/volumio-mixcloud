@@ -20,7 +20,7 @@ class LiveStreamRenderer extends BaseRenderer_1.default {
         let icon;
         let uri;
         switch (asType) {
-            case 'folder':
+            case 'folder': {
                 type = 'folder';
                 title = liveStream.name;
                 album = MixcloudContext_1.default.getI18n('MIXCLOUD_LIVE_STREAM');
@@ -33,7 +33,8 @@ class LiveStreamRenderer extends BaseRenderer_1.default {
                 };
                 uri = `${this.uri}/${ViewHelper_1.default.constructUriSegmentFromView(userView)}`;
                 break;
-            case 'playLiveStreamItem':
+            }
+            case 'playLiveStreamItem': {
                 const liveStreamView = {
                     name: 'liveStream',
                     username: liveStream.owner.username
@@ -45,6 +46,7 @@ class LiveStreamRenderer extends BaseRenderer_1.default {
                 albumart = liveStream.thumbnail;
                 uri = playUri;
                 break;
+            }
         }
         return {
             service: 'mixcloud',

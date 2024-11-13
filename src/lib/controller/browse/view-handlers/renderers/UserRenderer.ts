@@ -1,7 +1,7 @@
 import mixcloud from '../../../../MixcloudContext';
-import BaseRenderer, { RenderedHeader, RenderedListItem } from './BaseRenderer';
-import { UserEntity } from '../../../../entities/UserEntity';
-import { UserView } from '../UserViewHandler';
+import BaseRenderer, { type RenderedHeader, type RenderedListItem } from './BaseRenderer';
+import { type UserEntity } from '../../../../entities/UserEntity';
+import { type UserView } from '../UserViewHandler';
 import ViewHelper from '../ViewHelper';
 
 export default class UserRenderer extends BaseRenderer<UserEntity> {

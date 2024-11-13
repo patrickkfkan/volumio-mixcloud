@@ -185,7 +185,7 @@ _CloudcastViewHandler_instances = new WeakSet(), _CloudcastViewHandler_browseClo
     const lists = [];
     if (cloudcasts.items.length > 0) {
         const optionList = await this.getOptionList({
-            getOptionBundle: async () => userModel.getShowsOptions(),
+            getOptionBundle: () => Promise.resolve(userModel.getShowsOptions()),
             currentSelected: cloudcasts.params
         });
         if (optionList) {
@@ -207,12 +207,12 @@ _CloudcastViewHandler_instances = new WeakSet(), _CloudcastViewHandler_browseClo
     };
 }, _CloudcastViewHandler_browseUserShowOptionValues = async function _CloudcastViewHandler_browseUserShowOptionValues(option) {
     return this.browseOptionValues({
-        getOptionBundle: async () => this.getModel(model_1.ModelType.User).getShowsOptions(),
+        getOptionBundle: () => Promise.resolve(this.getModel(model_1.ModelType.User).getShowsOptions()),
         targetOption: option
     });
 }, _CloudcastViewHandler_browseSearchOptionValues = async function _CloudcastViewHandler_browseSearchOptionValues(option) {
     return this.browseOptionValues({
-        getOptionBundle: async () => this.getModel(model_1.ModelType.Cloudcast).getSearchOptions(),
+        getOptionBundle: () => Promise.resolve(this.getModel(model_1.ModelType.Cloudcast).getSearchOptions()),
         targetOption: option
     });
 }, _CloudcastViewHandler_browsePlaylistItems = async function _CloudcastViewHandler_browsePlaylistItems(playlistId) {
@@ -277,7 +277,7 @@ _CloudcastViewHandler_instances = new WeakSet(), _CloudcastViewHandler_browseClo
     const cloudcasts = await model.getCloudcasts(cloudcastParams);
     const lists = [];
     const optionList = await this.getOptionList({
-        getOptionBundle: async () => model.getSearchOptions(),
+        getOptionBundle: () => Promise.resolve(model.getSearchOptions()),
         currentSelected: cloudcasts.params,
         showOptionName: () => true
     });

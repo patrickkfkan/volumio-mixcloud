@@ -41,7 +41,7 @@ class CloudcastRenderer extends BaseRenderer_1.default {
         let icon;
         let uri;
         switch (asType) {
-            case 'folder':
+            case 'folder': {
                 type = 'folder';
                 title = cloudcast.name;
                 album = MixcloudContext_1.default.getI18n('MIXCLOUD_SHOW');
@@ -60,6 +60,7 @@ class CloudcastRenderer extends BaseRenderer_1.default {
                     uri += '@showMoreFromUser=1';
                 }
                 break;
+            }
             case 'playShowItem':
                 if (cloudcast.isExclusive) {
                     type = 'item-no-menu';

@@ -8,7 +8,7 @@ export function jsPromiseToKew<T>(promise: Promise<T>): any {
   promise.then((result) => {
     defer.resolve(result);
   })
-    .catch((error) => {
+    .catch((error: unknown) => {
       defer.reject(error);
     });
 
@@ -26,7 +26,12 @@ export function kewToJSPromise(promise: any): Promise<any> {
       resolve(result);
     })
       .fail((error: any) => {
-        reject(error);
+        if (error instanceof Error) {
+          reject(error);
+        }
+        else {
+          reject(Error(error));
+        }
       });
   });
 }

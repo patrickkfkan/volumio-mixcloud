@@ -38,9 +38,9 @@ export default class UIHelper {
         onclick: string;
         icon: {
             type: "fa" | "mixcloud";
-            float?: string | undefined;
-            color?: string | undefined;
-            class?: string | undefined;
+            float?: string;
+            color?: string;
+            class?: string;
         } | undefined;
     };
     static getRandomAlbumArtFromDir(dirname: string): string | null;

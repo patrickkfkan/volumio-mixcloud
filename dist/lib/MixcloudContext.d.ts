@@ -1,6 +1,6 @@
-import winston from 'winston';
+import type winston from 'winston';
 import Cache from './util/Cache';
-import { PluginConfigKey, PluginConfigValue } from './util/PluginConfig';
+import { type PluginConfigKey, type PluginConfigValue } from './util/PluginConfig';
 declare class MixcloudContext {
     #private;
     constructor();

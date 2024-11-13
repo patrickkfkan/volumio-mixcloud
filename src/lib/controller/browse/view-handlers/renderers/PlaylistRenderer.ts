@@ -1,8 +1,8 @@
-import BaseRenderer, { RenderedHeader, RenderedListItem } from './BaseRenderer';
-import { PlaylistEntity } from '../../../../entities/PlaylistEntity';
+import BaseRenderer, { type RenderedHeader, type RenderedListItem } from './BaseRenderer';
+import { type PlaylistEntity } from '../../../../entities/PlaylistEntity';
 import mixcloud from '../../../../MixcloudContext';
 import ViewHelper from '../ViewHelper';
-import { CloudcastView } from '../CloudcastViewHandler';
+import { type CloudcastView } from '../CloudcastViewHandler';
 
 export default class PlaylistRenderer extends BaseRenderer<PlaylistEntity> {
 

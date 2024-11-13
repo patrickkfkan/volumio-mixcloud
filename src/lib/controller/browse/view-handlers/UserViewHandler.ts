@@ -1,17 +1,17 @@
 import mixcloud from '../../../MixcloudContext';
-import View from './View';
-import { RenderedList, RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedList, type RenderedPage } from './ViewHandler';
 import { ModelType } from '../../../model';
-import { RenderedListItem } from './renderers/BaseRenderer';
-import UIHelper, { UILink, UI_STYLES } from '../../../util/UIHelper';
+import { type RenderedListItem } from './renderers/BaseRenderer';
+import UIHelper, { type UILink, UI_STYLES } from '../../../util/UIHelper';
 import ExplodableViewHandler from './ExplodableViewHandler';
 import ViewHandlerFactory from './ViewHandlerFactory';
 import { RendererType } from './renderers';
-import { GetUsersLoopFetchResult, UserModelGetUsersParams } from '../../../model/UserModel';
-import { CloudcastModelGetCloudcastsParams } from '../../../model/CloudcastModel';
-import { CloudcastView } from './CloudcastViewHandler';
+import { type GetUsersLoopFetchResult, type UserModelGetUsersParams } from '../../../model/UserModel';
+import { type CloudcastModelGetCloudcastsParams } from '../../../model/CloudcastModel';
+import { type CloudcastView } from './CloudcastViewHandler';
 import ViewHelper from './ViewHelper';
-import { PlaylistView } from './PlaylistViewHandler';
+import { type PlaylistView } from './PlaylistViewHandler';
 
 export interface UserView extends View {
   name: 'user' | 'users';
@@ -191,7 +191,7 @@ export default class UserViewHandler extends ExplodableViewHandler<UserView> {
     const lists: RenderedList[] = [];
 
     const optionList = await this.getOptionList({
-      getOptionBundle: async () => model.getSearchOptions(),
+      getOptionBundle: () => Promise.resolve(model.getSearchOptions()),
       currentSelected: users.params,
       showOptionName: () => true
     });
@@ -220,7 +220,7 @@ export default class UserViewHandler extends ExplodableViewHandler<UserView> {
 
   #browseSearchOptions(option: string) {
     return this.browseOptionValues({
-      getOptionBundle: async () => this.getModel(ModelType.User).getSearchOptions(),
+      getOptionBundle: () => Promise.resolve(this.getModel(ModelType.User).getSearchOptions()),
       targetOption: option
     });
   }

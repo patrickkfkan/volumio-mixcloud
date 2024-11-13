@@ -1,4 +1,4 @@
-import { CloudcastEntity } from '../entities/CloudcastEntity';
+import { type CloudcastEntity } from '../entities/CloudcastEntity';
 export type OptionBundle<T extends Record<string, any>> = {
     [K in keyof T]: OptionBundleEntry<T[K]>;
 };

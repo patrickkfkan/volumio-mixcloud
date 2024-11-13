@@ -1,14 +1,14 @@
 import mixcloud from '../../../MixcloudContext';
-import View from './View';
-import { RenderedList, RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedList, type RenderedPage } from './ViewHandler';
 import { ModelType } from '../../../model';
-import { RenderedListItem } from './renderers/BaseRenderer';
+import { type RenderedListItem } from './renderers/BaseRenderer';
 import UIHelper from '../../../util/UIHelper';
 import { RendererType } from './renderers';
-import { LoopFetchResult } from '../../../model/BaseModel';
+import { type LoopFetchResult } from '../../../model/BaseModel';
 import BaseViewHandler from './BaseViewHandler';
-import { TagModelGetTagsParams } from '../../../model/TagModel';
-import { SlugEntity } from '../../../entities/SlugEntity';
+import { type TagModelGetTagsParams } from '../../../model/TagModel';
+import { type SlugEntity } from '../../../entities/SlugEntity';
 
 export interface TagView extends View {
   name: 'tags';

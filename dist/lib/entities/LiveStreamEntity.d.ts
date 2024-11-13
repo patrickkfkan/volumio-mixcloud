@@ -1,4 +1,4 @@
-import { UserEntity } from './UserEntity.js';
+import { type UserEntity } from './UserEntity.js';
 export interface LiveStreamEntity {
     type: 'liveStream';
     id: string;

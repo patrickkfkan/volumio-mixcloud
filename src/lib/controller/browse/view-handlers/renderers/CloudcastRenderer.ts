@@ -1,8 +1,8 @@
-import BaseRenderer, { RenderedHeader, RenderedListItem } from './BaseRenderer';
-import { CloudcastEntity } from '../../../../entities/CloudcastEntity';
+import BaseRenderer, { type RenderedHeader, type RenderedListItem } from './BaseRenderer';
+import { type CloudcastEntity } from '../../../../entities/CloudcastEntity';
 import mixcloud from '../../../../MixcloudContext';
 import UIHelper, { UI_STYLES } from '../../../../util/UIHelper';
-import { CloudcastView } from '../CloudcastViewHandler';
+import { type CloudcastView } from '../CloudcastViewHandler';
 import ViewHelper from '../ViewHelper';
 
 export default class CloudcastRenderer extends BaseRenderer<CloudcastEntity> {
@@ -22,7 +22,7 @@ export default class CloudcastRenderer extends BaseRenderer<CloudcastEntity> {
     let uri: string;
 
     switch (asType) {
-      case 'folder':
+      case 'folder': {
         type = 'folder';
         title = cloudcast.name;
         album = mixcloud.getI18n('MIXCLOUD_SHOW');
@@ -43,7 +43,7 @@ export default class CloudcastRenderer extends BaseRenderer<CloudcastEntity> {
           uri += '@showMoreFromUser=1';
         }
         break;
-
+      }
       case 'playShowItem':
         if (cloudcast.isExclusive) {
           type = 'item-no-menu';

@@ -1,4 +1,4 @@
-import View from '../View';
+import type View from '../View';
 import CloudcastRenderer from './CloudcastRenderer';
 import LiveStreamRenderer from './LiveStreamRenderer';
 import PlaylistRenderer from './PlaylistRenderer';

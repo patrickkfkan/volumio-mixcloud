@@ -1,4 +1,4 @@
-import BaseModel, { LoopFetchCallbackParams } from './BaseModel';
+import BaseModel, { type LoopFetchCallbackParams } from './BaseModel';
 export interface PlaylistModelGetPlaylistsParams extends LoopFetchCallbackParams {
     username: string;
 }

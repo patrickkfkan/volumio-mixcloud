@@ -1,11 +1,11 @@
 import BaseViewHandler from './BaseViewHandler';
-import View from './View';
+import type View from './View';
 import ViewHelper from './ViewHelper';
-import { CloudcastEntity } from '../../../entities/CloudcastEntity';
+import { type CloudcastEntity } from '../../../entities/CloudcastEntity';
 import UIHelper from '../../../util/UIHelper';
-import { CloudcastView } from './CloudcastViewHandler';
-import { LiveStreamEntity } from '../../../entities/LiveStreamEntity';
-import { LiveStreamView } from './LiveStreamViewHandler';
+import { type CloudcastView } from './CloudcastViewHandler';
+import { type LiveStreamEntity } from '../../../entities/LiveStreamEntity';
+import { type LiveStreamView } from './LiveStreamViewHandler';
 
 export interface ExplodedTrackInfo {
   service: 'mixcloud';
@@ -39,12 +39,12 @@ export default abstract class ExplodableViewHandler<V extends View> extends Base
     return (await Promise.all(trackInfoPromises)).filter((song) => song) as ExplodedTrackInfo[];
   }
 
-  protected async convertStreamableEntityToExplodedTrackInfo(entity: StreamableEntity): Promise<ExplodedTrackInfo | null> {
+  protected convertStreamableEntityToExplodedTrackInfo(entity: StreamableEntity): Promise<ExplodedTrackInfo | null> {
     switch (entity.type) {
       case 'cloudcast':
-        return this.#convertCloudcastToExplodedTrackInfo(entity);
+        return Promise.resolve(this.#convertCloudcastToExplodedTrackInfo(entity));
       case 'liveStream':
-        return this.#convertLivestreamToExplodedTrackInfo(entity);
+        return Promise.resolve(this.#convertLivestreamToExplodedTrackInfo(entity));
     }
   }
 

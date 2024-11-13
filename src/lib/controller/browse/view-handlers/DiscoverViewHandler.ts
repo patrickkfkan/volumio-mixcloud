@@ -1,13 +1,13 @@
 import mixcloud from '../../../MixcloudContext';
-import View from './View';
-import { RenderedList, RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedList, type RenderedPage } from './ViewHandler';
 import { ModelType } from '../../../model';
-import { RenderedListItem } from './renderers/BaseRenderer';
-import { DiscoverLoopFetchResult, DiscoverModelDiscoverParams, DiscoverResultsOrderBy, DiscoverType } from '../../../model/DiscoverModel';
+import { type RenderedListItem } from './renderers/BaseRenderer';
+import { type DiscoverLoopFetchResult, type DiscoverModelDiscoverParams, type DiscoverResultsOrderBy, type DiscoverType } from '../../../model/DiscoverModel';
 import UIHelper from '../../../util/UIHelper';
-import { SlugEntity } from '../../../entities/SlugEntity';
+import { type SlugEntity } from '../../../entities/SlugEntity';
 import ExplodableViewHandler from './ExplodableViewHandler';
-import { FeaturedView } from './FeaturedViewHandler';
+import { type FeaturedView } from './FeaturedViewHandler';
 import ViewHelper from './ViewHelper';
 
 export interface DiscoverView<T extends DiscoverType = 'all'> extends View {
@@ -138,7 +138,7 @@ export default class DiscoverViewHandler<T extends DiscoverType = 'all'> extends
     }
 
     const optionList = await this.getOptionList({
-      getOptionBundle: async () => discoverOptions,
+      getOptionBundle: () => Promise.resolve(discoverOptions),
       currentSelected
     });
     if (optionList) {

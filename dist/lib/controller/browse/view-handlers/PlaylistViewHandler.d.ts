@@ -1,5 +1,5 @@
-import View from './View';
-import { RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedPage } from './ViewHandler';
 import ExplodableViewHandler from './ExplodableViewHandler';
 export interface PlaylistView extends View {
     name: 'playlist' | 'playlists';

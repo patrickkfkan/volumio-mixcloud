@@ -1,6 +1,6 @@
-import { SearchAPI, SearchAPIGetUsersParams, UserAPIGetShowsParams } from 'mixcloud-fetch';
-import BaseModel, { CommonModelPaginationParams, LoopFetchResult, OptionBundle } from './BaseModel';
-import { UserEntity } from '../entities/UserEntity';
+import { type SearchAPI, type SearchAPIGetUsersParams, type UserAPIGetShowsParams } from 'mixcloud-fetch';
+import BaseModel, { type CommonModelPaginationParams, type LoopFetchResult, type OptionBundle } from './BaseModel';
+import { type UserEntity } from '../entities/UserEntity';
 export type UserOrderBy = NonNullable<UserAPIGetShowsParams['orderBy']>;
 export type UserDateJoined = NonNullable<SearchAPIGetUsersParams['dateJoined']>;
 export type UserType = NonNullable<SearchAPIGetUsersParams['userType']>;

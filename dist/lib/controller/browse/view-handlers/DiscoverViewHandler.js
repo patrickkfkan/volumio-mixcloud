@@ -113,7 +113,7 @@ _DiscoverViewHandler_instances = new WeakSet(), _DiscoverViewHandler_browseDisco
         discoverOptions.slug.values.push(ensureSlug);
     }
     const optionList = await this.getOptionList({
-        getOptionBundle: async () => discoverOptions,
+        getOptionBundle: () => Promise.resolve(discoverOptions),
         currentSelected
     });
     if (optionList) {

@@ -1,6 +1,6 @@
-import { LiveStreamAPI, LiveStreamAPIGetCurrentParams } from 'mixcloud-fetch';
-import BaseModel, { CommonModelPaginationParams, LoopFetchResult, OptionBundle } from './BaseModel';
-import { LiveStreamEntity } from '../entities/LiveStreamEntity';
+import { type LiveStreamAPI, type LiveStreamAPIGetCurrentParams } from 'mixcloud-fetch';
+import BaseModel, { type CommonModelPaginationParams, type LoopFetchResult, type OptionBundle } from './BaseModel';
+import { type LiveStreamEntity } from '../entities/LiveStreamEntity';
 export type LiveStreamOrderBy = NonNullable<LiveStreamAPIGetCurrentParams['orderBy']>;
 export interface LiveStreamOptionValues {
     orderBy: LiveStreamOrderBy;

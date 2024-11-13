@@ -1,7 +1,7 @@
 import BaseViewHandler from './BaseViewHandler';
-import View from './View';
-import { CloudcastEntity } from '../../../entities/CloudcastEntity';
-import { LiveStreamEntity } from '../../../entities/LiveStreamEntity';
+import type View from './View';
+import { type CloudcastEntity } from '../../../entities/CloudcastEntity';
+import { type LiveStreamEntity } from '../../../entities/LiveStreamEntity';
 export interface ExplodedTrackInfo {
     service: 'mixcloud';
     uri: string;

@@ -1,4 +1,4 @@
-import View from '../View';
+import type View from '../View';
 import CloudcastRenderer from './CloudcastRenderer';
 import LiveStreamRenderer from './LiveStreamRenderer';
 import PlaylistRenderer from './PlaylistRenderer';
@@ -32,6 +32,6 @@ export default class Renderer {
     if (RENDERER_TYPE_TO_CLASS[type]) {
       return new RENDERER_TYPE_TO_CLASS[type](uri, currentView, previousViews);
     }
-    throw Error(`Renderer not found for type ${RendererType}`);
+    throw Error(`Renderer not found for type ${String(type)}`);
   }
 }

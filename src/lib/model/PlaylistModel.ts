@@ -1,6 +1,6 @@
-import mcfetch, { ItemList, Playlist } from 'mixcloud-fetch';
+import mcfetch, { type ItemList, type Playlist } from 'mixcloud-fetch';
 import mixcloud from '../MixcloudContext';
-import BaseModel, { LoopFetchCallbackParams } from './BaseModel';
+import BaseModel, { type LoopFetchCallbackParams } from './BaseModel';
 import EntityConverter from '../util/EntityConverter';
 
 export interface PlaylistModelGetPlaylistsParams extends LoopFetchCallbackParams {

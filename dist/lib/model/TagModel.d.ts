@@ -1,6 +1,6 @@
-import { SearchAPI } from 'mixcloud-fetch';
-import BaseModel, { CommonModelPaginationParams } from './BaseModel';
-import { SlugEntity } from '../entities/SlugEntity';
+import { type SearchAPI } from 'mixcloud-fetch';
+import BaseModel, { type CommonModelPaginationParams } from './BaseModel';
+import { type SlugEntity } from '../entities/SlugEntity';
 export interface TagModelGetTagsParams extends CommonModelPaginationParams {
     keywords: string;
 }

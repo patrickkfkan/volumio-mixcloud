@@ -1,8 +1,8 @@
-import mcfetch, { SearchAPI, Tag } from 'mixcloud-fetch';
+import mcfetch, { type SearchAPI, type Tag } from 'mixcloud-fetch';
 import mixcloud from '../MixcloudContext';
-import BaseModel, { CommonModelPaginationParams, LoopFetchResult } from './BaseModel';
+import BaseModel, { type CommonModelPaginationParams, type LoopFetchResult } from './BaseModel';
 import EntityConverter from '../util/EntityConverter';
-import { SlugEntity } from '../entities/SlugEntity';
+import { type SlugEntity } from '../entities/SlugEntity';
 
 export interface TagModelGetTagsParams extends CommonModelPaginationParams {
   keywords: string;

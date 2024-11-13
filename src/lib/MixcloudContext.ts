@@ -1,8 +1,8 @@
 import format from 'string-format';
 import fs from 'fs-extra';
-import winston from 'winston';
+import type winston from 'winston';
 import Cache from './util/Cache';
-import { PLUGIN_CONFIG_SCHEMA, PluginConfigKey, PluginConfigValue } from './util/PluginConfig';
+import { PLUGIN_CONFIG_SCHEMA, type PluginConfigKey, type PluginConfigValue } from './util/PluginConfig';
 
 class MixcloudContext {
 

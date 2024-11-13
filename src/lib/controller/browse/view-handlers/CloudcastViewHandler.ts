@@ -1,14 +1,14 @@
 import mixcloud from '../../../MixcloudContext';
 import { ModelType } from '../../../model';
-import { CloudcastModelGetCloudcastsParams } from '../../../model/CloudcastModel';
-import UIHelper, { UILink, UI_STYLES } from '../../../util/UIHelper';
+import { type CloudcastModelGetCloudcastsParams } from '../../../model/CloudcastModel';
+import UIHelper, { type UILink, UI_STYLES } from '../../../util/UIHelper';
 import ExplodableViewHandler from './ExplodableViewHandler';
-import { UserView } from './UserViewHandler';
-import View from './View';
-import { RenderedList, RenderedPage } from './ViewHandler';
+import { type UserView } from './UserViewHandler';
+import type View from './View';
+import { type RenderedList, type RenderedPage } from './ViewHandler';
 import ViewHelper from './ViewHelper';
 import { RendererType } from './renderers';
-import { RenderedListItem } from './renderers/BaseRenderer';
+import { type RenderedListItem } from './renderers/BaseRenderer';
 
 export interface CloudcastView extends View {
   name: 'cloudcast' | 'cloudcasts';
@@ -157,7 +157,7 @@ export default class CloudcastViewHandler extends ExplodableViewHandler<Cloudcas
 
     if (cloudcasts.items.length > 0) {
       const optionList = await this.getOptionList({
-        getOptionBundle: async () => userModel.getShowsOptions(),
+        getOptionBundle: () => Promise.resolve(userModel.getShowsOptions()),
         currentSelected: cloudcasts.params
       });
 
@@ -187,14 +187,14 @@ export default class CloudcastViewHandler extends ExplodableViewHandler<Cloudcas
 
   async #browseUserShowOptionValues(option: string) {
     return this.browseOptionValues({
-      getOptionBundle: async () => this.getModel(ModelType.User).getShowsOptions(),
+      getOptionBundle: () => Promise.resolve(this.getModel(ModelType.User).getShowsOptions()),
       targetOption: option
     });
   }
 
   async #browseSearchOptionValues(option: string) {
     return this.browseOptionValues({
-      getOptionBundle: async () => this.getModel(ModelType.Cloudcast).getSearchOptions(),
+      getOptionBundle: () => Promise.resolve(this.getModel(ModelType.Cloudcast).getSearchOptions()),
       targetOption: option
     });
   }
@@ -272,7 +272,7 @@ export default class CloudcastViewHandler extends ExplodableViewHandler<Cloudcas
     const lists: RenderedList[] = [];
 
     const optionList = await this.getOptionList({
-      getOptionBundle: async () => model.getSearchOptions(),
+      getOptionBundle: () => Promise.resolve(model.getSearchOptions()),
       currentSelected: cloudcasts.params,
       showOptionName: () => true
     });

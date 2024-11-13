@@ -120,7 +120,7 @@ _DiscoverModel_instances = new WeakSet(), _DiscoverModel_getDiscoverFetchPromise
             pageToken: params.pageToken
         };
         switch (params.list) {
-            case 'all':
+            case 'all': {
                 const fetchedAll = await mixcloud_fetch_1.default.tag(params.slug || '').getShows({
                     orderBy: params.orderBy,
                     country: params.country,
@@ -130,7 +130,8 @@ _DiscoverModel_instances = new WeakSet(), _DiscoverModel_getDiscoverFetchPromise
                     throw Error(`Tag '${params.slug}' not found`);
                 }
                 return fetchedAll;
-            case 'featured':
+            }
+            case 'featured': {
                 const fetchedFeatured = await mixcloud_fetch_1.default.tag(params.slug || '').getFeatured({
                     orderBy: params.orderBy,
                     ...paginationParams
@@ -139,6 +140,7 @@ _DiscoverModel_instances = new WeakSet(), _DiscoverModel_getDiscoverFetchPromise
                     throw Error(`Tag '${params.slug}' not found`);
                 }
                 return fetchedFeatured;
+            }
         }
     });
 }, _DiscoverModel_getCloudcastsFromFetchResult = function _DiscoverModel_getCloudcastsFromFetchResult(result) {

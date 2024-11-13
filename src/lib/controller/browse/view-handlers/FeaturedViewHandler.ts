@@ -1,8 +1,8 @@
 import mixcloud from '../../../MixcloudContext';
-import { DiscoverType } from '../../../model/DiscoverModel';
+import { type DiscoverType } from '../../../model/DiscoverModel';
 import UIHelper from '../../../util/UIHelper';
-import { SlugEntity } from '../../../entities/SlugEntity';
-import DiscoverViewHandler, { DiscoverView } from './DiscoverViewHandler';
+import { type SlugEntity } from '../../../entities/SlugEntity';
+import DiscoverViewHandler, { type DiscoverView } from './DiscoverViewHandler';
 import ViewHelper from './ViewHelper';
 
 export type FeaturedView = DiscoverView<'featured'>;

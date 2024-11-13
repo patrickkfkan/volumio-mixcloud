@@ -1,7 +1,7 @@
-import { TagAPI, TagAPIGetFeaturedParams, TagAPIGetShowsParams } from 'mixcloud-fetch';
-import BaseModel, { CommonModelPaginationParams, LoopFetchResult, OptionBundle } from './BaseModel';
-import { CloudcastEntity } from '../entities/CloudcastEntity';
-import { SlugEntity } from '../entities/SlugEntity';
+import { type TagAPI, type TagAPIGetFeaturedParams, type TagAPIGetShowsParams } from 'mixcloud-fetch';
+import BaseModel, { type CommonModelPaginationParams, type LoopFetchResult, type OptionBundle } from './BaseModel';
+import { type CloudcastEntity } from '../entities/CloudcastEntity';
+import { type SlugEntity } from '../entities/SlugEntity';
 export type DiscoverType = 'all' | 'featured';
 export interface DiscoverOptionValues<T extends DiscoverType> {
     slug: string;

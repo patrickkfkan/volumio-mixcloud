@@ -1,4 +1,4 @@
-import { UserEntity } from './UserEntity';
+import { type UserEntity } from './UserEntity';
 
 export interface PlaylistEntity {
   type: 'playlist';

@@ -1,6 +1,6 @@
-import { PlaylistAPI, SearchAPI, SearchAPIGetShowsParams, UserAPI, UserAPIGetShowsParams } from 'mixcloud-fetch';
-import BaseModel, { CommonModelPaginationParams, LoopFetchResult, OptionBundle } from './BaseModel';
-import { CloudcastEntity } from '../entities/CloudcastEntity';
+import { type PlaylistAPI, type SearchAPI, type SearchAPIGetShowsParams, type UserAPI, type UserAPIGetShowsParams } from 'mixcloud-fetch';
+import BaseModel, { type CommonModelPaginationParams, type LoopFetchResult, type OptionBundle } from './BaseModel';
+import { type CloudcastEntity } from '../entities/CloudcastEntity';
 export type GetCloudcastsType = 'byUser' | 'byPlaylist' | 'bySearch';
 export type CloudcastOrderby = NonNullable<UserAPIGetShowsParams['orderBy']>;
 export type CloudcastDateUploaded = NonNullable<SearchAPIGetShowsParams['dateUploaded']>;

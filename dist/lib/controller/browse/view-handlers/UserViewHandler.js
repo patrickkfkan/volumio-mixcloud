@@ -203,7 +203,7 @@ _UserViewHandler_instances = new WeakSet(), _UserViewHandler_browseUser = async 
     const users = await model.getUsers(userParams);
     const lists = [];
     const optionList = await this.getOptionList({
-        getOptionBundle: async () => model.getSearchOptions(),
+        getOptionBundle: () => Promise.resolve(model.getSearchOptions()),
         currentSelected: users.params,
         showOptionName: () => true
     });
@@ -227,7 +227,7 @@ _UserViewHandler_instances = new WeakSet(), _UserViewHandler_browseUser = async 
     };
 }, _UserViewHandler_browseSearchOptions = function _UserViewHandler_browseSearchOptions(option) {
     return this.browseOptionValues({
-        getOptionBundle: async () => this.getModel(model_1.ModelType.User).getSearchOptions(),
+        getOptionBundle: () => Promise.resolve(this.getModel(model_1.ModelType.User).getSearchOptions()),
         targetOption: option
     });
 };

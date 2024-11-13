@@ -1,7 +1,7 @@
-import { CloudcastView } from '../browse/view-handlers/CloudcastViewHandler';
-import { TagView } from '../browse/view-handlers/TagViewHandler';
-import { UserView } from '../browse/view-handlers/UserViewHandler';
-import { RenderedList } from '../browse/view-handlers/ViewHandler';
+import { type CloudcastView } from '../browse/view-handlers/CloudcastViewHandler';
+import { type TagView } from '../browse/view-handlers/TagViewHandler';
+import { type UserView } from '../browse/view-handlers/UserViewHandler';
+import { type RenderedList } from '../browse/view-handlers/ViewHandler';
 import ViewHandlerFactory from '../browse/view-handlers/ViewHandlerFactory';
 import ViewHelper from '../browse/view-handlers/ViewHelper';
 

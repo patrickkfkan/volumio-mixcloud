@@ -1,8 +1,8 @@
-import mcfetch, { Cloudcast, PlaylistAPI, SearchAPI, SearchAPIGetShowsParams, UserAPI, UserAPIGetShowsParams } from 'mixcloud-fetch';
+import mcfetch, { type Cloudcast, type PlaylistAPI, type SearchAPI, type SearchAPIGetShowsParams, type UserAPI, type UserAPIGetShowsParams } from 'mixcloud-fetch';
 import mixcloud from '../MixcloudContext';
-import BaseModel, { CommonModelPaginationParams, LoopFetchResult, OptionBundle } from './BaseModel';
+import BaseModel, { type CommonModelPaginationParams, type LoopFetchResult, type OptionBundle } from './BaseModel';
 import EntityConverter from '../util/EntityConverter';
-import { CloudcastEntity } from '../entities/CloudcastEntity';
+import { type CloudcastEntity } from '../entities/CloudcastEntity';
 
 export type GetCloudcastsType = 'byUser' | 'byPlaylist' | 'bySearch';
 
@@ -138,7 +138,7 @@ export default class CloudcastModel extends BaseModel {
           pageToken: params.pageToken
         };
         switch (params.getType) {
-          case 'byUser':
+          case 'byUser': {
             const fetchedByUser = await mcfetch.user(params.username).getShows({
               orderBy: params.orderBy,
               ...paginationParams
@@ -147,19 +147,20 @@ export default class CloudcastModel extends BaseModel {
               throw Error(`User '${params.username}' not found`);
             }
             return fetchedByUser;
-
-          case 'byPlaylist':
+          }
+          case 'byPlaylist': {
             const fetchedByPlaylist = await mcfetch.playlist(params.playlistId).getShows(paginationParams);
             if (!fetchedByPlaylist) {
               throw Error(`Playlist #${params.playlistId} not found`);
             }
             return fetchedByPlaylist;
-
-          case 'bySearch':
+          }
+          case 'bySearch': {
             return await mcfetch.search(params.keywords).getShows({
               dateUploaded: params.dateUploaded,
               ...paginationParams
             });
+          }
         }
       });
   }

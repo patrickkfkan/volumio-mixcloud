@@ -1,23 +1,28 @@
 import Model, { ModelType } from '../../../model';
-import BaseModel, { OptionBundle } from '../../../model/BaseModel';
-import CloudcastModel, { GetCloudcastsLoopFetchResult, GetCloudcastsType } from '../../../model/CloudcastModel';
-import DiscoverModel from '../../../model/DiscoverModel';
-import LiveStreamModel from '../../../model/LiveStreamModel';
-import PlaylistModel from '../../../model/PlaylistModel';
-import TagModel from '../../../model/TagModel';
-import UserModel from '../../../model/UserModel';
-import UIHelper, { UILink, UI_STYLES } from '../../../util/UIHelper';
-import { ExplodedTrackInfo } from './ExplodableViewHandler';
-import View, { PageRef } from './View';
-import ViewHandler, { RenderedList, RenderedPage } from './ViewHandler';
+import {type OptionBundle} from '../../../model/BaseModel';
+import type BaseModel from '../../../model/BaseModel';
+import {type GetCloudcastsLoopFetchResult, type GetCloudcastsType} from '../../../model/CloudcastModel';
+import type CloudcastModel from '../../../model/CloudcastModel';
+import type DiscoverModel from '../../../model/DiscoverModel';
+import type LiveStreamModel from '../../../model/LiveStreamModel';
+import type PlaylistModel from '../../../model/PlaylistModel';
+import type TagModel from '../../../model/TagModel';
+import type UserModel from '../../../model/UserModel';
+import UIHelper, { type UILink, UI_STYLES } from '../../../util/UIHelper';
+import { type ExplodedTrackInfo } from './ExplodableViewHandler';
+import {type PageRef} from './View';
+import type View from './View';
+import {type RenderedList, type RenderedPage} from './ViewHandler';
+import type ViewHandler from './ViewHandler';
 import ViewHelper from './ViewHelper';
 import Renderer, { RendererType } from './renderers';
-import BaseRenderer, { RenderedListItem } from './renderers/BaseRenderer';
-import CloudcastRenderer from './renderers/CloudcastRenderer';
-import LiveStreamRenderer from './renderers/LiveStreamRenderer';
-import PlaylistRenderer from './renderers/PlaylistRenderer';
-import SlugRenderer from './renderers/SlugRenderer';
-import UserRenderer from './renderers/UserRenderer';
+import {type RenderedListItem} from './renderers/BaseRenderer';
+import type BaseRenderer from './renderers/BaseRenderer';
+import type CloudcastRenderer from './renderers/CloudcastRenderer';
+import type LiveStreamRenderer from './renderers/LiveStreamRenderer';
+import type PlaylistRenderer from './renderers/PlaylistRenderer';
+import type SlugRenderer from './renderers/SlugRenderer';
+import type UserRenderer from './renderers/UserRenderer';
 
 export default class BaseViewHandler<V extends View> implements ViewHandler {
 
@@ -35,8 +40,8 @@ export default class BaseViewHandler<V extends View> implements ViewHandler {
     this.#renderers = {};
   }
 
-  async browse(): Promise<RenderedPage> {
-    return {};
+  browse(): Promise<RenderedPage> {
+    return Promise.resolve({});
   }
 
   explode(): Promise<ExplodedTrackInfo[]> {
@@ -84,7 +89,7 @@ export default class BaseViewHandler<V extends View> implements ViewHandler {
           model = Model.getInstance(ModelType.LiveStream);
           break;
         default:
-          throw Error(`Unknown model type: ${type}`);
+          throw Error(`Unknown model type: ${String(type)}`);
       }
       this.#models[type] = model;
     }
@@ -122,7 +127,7 @@ export default class BaseViewHandler<V extends View> implements ViewHandler {
             this.#currentView, this.#previousViews);
           break;
         default:
-          throw Error(`Unknown renderer type: ${type}`);
+          throw Error(`Unknown renderer type: ${String(type)}`);
       }
       this.#renderers[type] = renderer;
     }

@@ -7,14 +7,14 @@ import vconf from 'v-conf';
 
 import mixcloud from './lib/MixcloudContext';
 import BrowseController from './lib/controller/browse';
-import SearchController, { SearchQuery } from './lib/controller/search/SearchController';
+import SearchController, { type SearchQuery } from './lib/controller/search/SearchController';
 import PlayController from './lib/controller/play/PlayController';
-import { ExplodedTrackInfo } from './lib/controller/browse/view-handlers/ExplodableViewHandler';
+import { type ExplodedTrackInfo } from './lib/controller/browse/view-handlers/ExplodableViewHandler';
 import { jsPromiseToKew } from './lib/util';
-import { RenderedPage } from './lib/controller/browse/view-handlers/ViewHandler';
+import { type RenderedPage } from './lib/controller/browse/view-handlers/ViewHandler';
 import ViewHelper from './lib/controller/browse/view-handlers/ViewHelper';
 import Model from './lib/model';
-import { UserView } from './lib/controller/browse/view-handlers/UserViewHandler';
+import { type UserView } from './lib/controller/browse/view-handlers/UserViewHandler';
 
 interface GotoParams extends ExplodedTrackInfo {
   type: 'album' | 'artist';
@@ -244,7 +244,7 @@ class ControllerMixcloud {
   }
 
   goto(data: GotoParams) {
-    return jsPromiseToKew((async (): Promise<RenderedPage> => {
+    return jsPromiseToKew(((): Promise<RenderedPage> => {
       if (!this.#browseController) {
         throw Error('Mixcloud plugin is not started');
       }

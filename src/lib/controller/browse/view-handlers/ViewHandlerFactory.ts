@@ -1,7 +1,7 @@
-import BaseViewHandler from './BaseViewHandler';
+import type BaseViewHandler from './BaseViewHandler';
 import RootViewHandler from './RootViewHandler';
 import CloudcastViewHandler from './CloudcastViewHandler';
-import View from './View';
+import type View from './View';
 import ViewHelper from './ViewHelper';
 import DiscoverViewHandler from './DiscoverViewHandler';
 import FeaturedViewHandler from './FeaturedViewHandler';

@@ -1,8 +1,8 @@
-import View from './View';
-import { RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedPage } from './ViewHandler';
 import ExplodableViewHandler from './ExplodableViewHandler';
-import { LiveStreamOrderBy } from '../../../model/LiveStreamModel';
-import { LiveStreamEntity } from '../../../entities/LiveStreamEntity';
+import { type LiveStreamOrderBy } from '../../../model/LiveStreamModel';
+import { type LiveStreamEntity } from '../../../entities/LiveStreamEntity';
 export interface LiveStreamView extends View {
     name: 'liveStream' | 'liveStreams';
     category?: string;

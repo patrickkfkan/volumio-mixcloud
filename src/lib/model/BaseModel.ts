@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import { CloudcastEntity } from '../entities/CloudcastEntity';
+import { type CloudcastEntity } from '../entities/CloudcastEntity';
 import mixcloud from '../MixcloudContext';
 
 /*Export type OptionBundle<T extends any> =

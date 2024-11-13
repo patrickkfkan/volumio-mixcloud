@@ -96,7 +96,7 @@ _CloudcastModel_instances = new WeakSet(), _CloudcastModel_getCloudcastsByType =
             pageToken: params.pageToken
         };
         switch (params.getType) {
-            case 'byUser':
+            case 'byUser': {
                 const fetchedByUser = await mixcloud_fetch_1.default.user(params.username).getShows({
                     orderBy: params.orderBy,
                     ...paginationParams
@@ -105,17 +105,20 @@ _CloudcastModel_instances = new WeakSet(), _CloudcastModel_getCloudcastsByType =
                     throw Error(`User '${params.username}' not found`);
                 }
                 return fetchedByUser;
-            case 'byPlaylist':
+            }
+            case 'byPlaylist': {
                 const fetchedByPlaylist = await mixcloud_fetch_1.default.playlist(params.playlistId).getShows(paginationParams);
                 if (!fetchedByPlaylist) {
                     throw Error(`Playlist #${params.playlistId} not found`);
                 }
                 return fetchedByPlaylist;
-            case 'bySearch':
+            }
+            case 'bySearch': {
                 return await mixcloud_fetch_1.default.search(params.keywords).getShows({
                     dateUploaded: params.dateUploaded,
                     ...paginationParams
                 });
+            }
         }
     });
 }, _CloudcastModel_getCloudcastsFromFetchResult = function _CloudcastModel_getCloudcastsFromFetchResult(result) {

@@ -5,7 +5,7 @@ import libQ from 'kew';
 import miniget from 'miniget';
 import { Parser as m3u8Parser } from 'm3u8-parser';
 import mixcloud from '../../MixcloudContext';
-import { ExplodedTrackInfo } from '../browse/view-handlers/ExplodableViewHandler';
+import { type ExplodedTrackInfo } from '../browse/view-handlers/ExplodableViewHandler';
 import ViewHelper from '../browse/view-handlers/ViewHelper';
 import Model, { ModelType } from '../../model';
 import LiveStreamProxy from './LiveStreamProxy';

@@ -1,16 +1,16 @@
 import mixcloud from '../../../MixcloudContext';
-import View from './View';
-import { RenderedList, RenderedPage } from './ViewHandler';
+import type View from './View';
+import { type RenderedList, type RenderedPage } from './ViewHandler';
 import { ModelType } from '../../../model';
-import { RenderedListItem } from './renderers/BaseRenderer';
+import { type RenderedListItem } from './renderers/BaseRenderer';
 import UIHelper from '../../../util/UIHelper';
 import ExplodableViewHandler from './ExplodableViewHandler';
 import { RendererType } from './renderers';
-import { PlaylistModelGetPlaylistsParams } from '../../../model/PlaylistModel';
-import { CloudcastModelGetCloudcastsParams } from '../../../model/CloudcastModel';
-import { LoopFetchResult } from '../../../model/BaseModel';
-import { PlaylistEntity } from '../../../entities/PlaylistEntity';
-import { UserEntity } from '../../../entities/UserEntity';
+import { type PlaylistModelGetPlaylistsParams } from '../../../model/PlaylistModel';
+import { type CloudcastModelGetCloudcastsParams } from '../../../model/CloudcastModel';
+import { type LoopFetchResult } from '../../../model/BaseModel';
+import { type PlaylistEntity } from '../../../entities/PlaylistEntity';
+import { type UserEntity } from '../../../entities/UserEntity';
 
 export interface PlaylistView extends View {
   name: 'playlist' | 'playlists';

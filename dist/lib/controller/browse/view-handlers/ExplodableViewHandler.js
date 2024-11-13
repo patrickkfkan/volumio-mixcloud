@@ -30,12 +30,12 @@ class ExplodableViewHandler extends BaseViewHandler_1.default {
         const trackInfoPromises = tracks.map((track) => this.convertStreamableEntityToExplodedTrackInfo(track));
         return (await Promise.all(trackInfoPromises)).filter((song) => song);
     }
-    async convertStreamableEntityToExplodedTrackInfo(entity) {
+    convertStreamableEntityToExplodedTrackInfo(entity) {
         switch (entity.type) {
             case 'cloudcast':
-                return __classPrivateFieldGet(this, _ExplodableViewHandler_instances, "m", _ExplodableViewHandler_convertCloudcastToExplodedTrackInfo).call(this, entity);
+                return Promise.resolve(__classPrivateFieldGet(this, _ExplodableViewHandler_instances, "m", _ExplodableViewHandler_convertCloudcastToExplodedTrackInfo).call(this, entity));
             case 'liveStream':
-                return __classPrivateFieldGet(this, _ExplodableViewHandler_instances, "m", _ExplodableViewHandler_convertLivestreamToExplodedTrackInfo).call(this, entity);
+                return Promise.resolve(__classPrivateFieldGet(this, _ExplodableViewHandler_instances, "m", _ExplodableViewHandler_convertLivestreamToExplodedTrackInfo).call(this, entity));
         }
     }
 }

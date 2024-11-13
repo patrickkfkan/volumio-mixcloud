@@ -21,7 +21,6 @@ class BaseRenderer {
         __classPrivateFieldSet(this, _BaseRenderer_currentView, currentView, "f");
         __classPrivateFieldSet(this, _BaseRenderer_previousViews, previousViews, "f");
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     renderToHeader(data) {
         return null;
     }
